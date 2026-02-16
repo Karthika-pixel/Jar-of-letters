@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Jar of Letters</title>
+<meta name="description" content="Write love letters, seal them with love, and send a jar full of your heart.">
+<meta name="theme-color" content="#F6F1EA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<style>
+:root{--bg:#F6F1EA;--paper:#FBF8F3;--ink:#1E1410;--ink60:#6B5A4E;--ink40:#9A8B7E;--red:#B83A3A;--redLight:#E25555;--redDark:#6E1414;--border:#DDD4C8;--envF:#F5ECE0;--envB:#EDE2D0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes floatH{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-100vh) rotate(360deg);opacity:0}}
+@keyframes lidFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes sealCrack{0%{transform:scale(1) rotate(0)}40%{transform:scale(1.3) rotate(10deg)}100%{transform:scale(0) rotate(-30deg);opacity:0}}
+@keyframes hBurst{0%{transform:translate(-50%,-50%) scale(0);opacity:1}60%{opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.2);opacity:0}}
+@keyframes sealStamp{0%{transform:scale(3) rotate(-20deg);opacity:0}50%{transform:scale(1.15) rotate(5deg);opacity:1}70%{transform:scale(0.95) rotate(-2deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes confFall{0%{transform:translateY(0) rotate(0) scale(0);opacity:0}15%{opacity:1;transform:translateY(-30px) rotate(40deg) scale(1.3)}100%{transform:translateY(80px) rotate(200deg) scale(0.4);opacity:0}}
+@keyframes envFly{0%{opacity:0;transform:translateY(-60px) scale(0.5) rotate(-20deg)}60%{opacity:1;transform:translateY(5px) scale(1.05) rotate(3deg)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
+.fh{position:absolute;bottom:-30px;animation:floatH linear infinite;color:var(--red)}
+.hearts-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.screen{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:40px 20px 60px;animation:fadeUp 500ms ease}
+.btn{border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 300ms ease}
+.btn-p{background:var(--red);color:white;padding:14px 36px;font-size:15px;animation:pulse 2.5s ease-in-out infinite}
+.btn-p:hover{background:#a03333;transform:translateY(-1px)}
+.btn-p:disabled{opacity:0.5;cursor:default;animation:none}
+.btn-s{background:transparent;color:var(--ink60);border:1.5px solid var(--border);padding:12px 28px;font-size:14px}
+.btn-s:hover{border-color:var(--red);color:var(--red)}
+input[type="text"]{width:100%;padding:14px 18px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);background:var(--paper);outline:none;transition:border-color 200ms}
+input[type="text"]:focus{border-color:var(--red)}
+input[type="text"]::placeholder{color:var(--ink40)}
+textarea{width:100%;min-height:220px;border:none;outline:none;resize:vertical;font-family:'Playfair Display',serif;font-style:italic;font-size:20px;line-height:35px;color:var(--ink);padding-left:60px;background:repeating-linear-gradient(transparent,transparent 34px,rgba(30,20,16,0.08) 34px,rgba(30,20,16,0.08) 35px);background-attachment:local}
+textarea::placeholder{color:var(--ink40);font-family:'DM Sans',sans-serif;font-size:15px;font-style:normal}
+.ecard{background:linear-gradient(155deg,var(--envF),var(--envB));border:1.5px solid var(--border);border-radius:8px;padding:28px 20px 22px;cursor:pointer;position:relative;transition:all 300ms cubic-bezier(.25,.46,.45,.94);text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.ecard:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(30,20,16,.1)}
+.ecard.sel{border:2px solid var(--red)}
+.renv{cursor:pointer;transition:all 300ms cubic-bezier(.25,.46,.45,.94);background:linear-gradient(155deg,var(--envF),var(--envB));border:1.5px solid var(--border);border-radius:12px;padding:32px 20px 24px;text-align:center;position:relative}
+.renv:hover{transform:translateY(-6px);box-shadow:0 12px 32px rgba(30,20,16,.15)}
+.pdot{width:10px;height:10px;border-radius:50%;transition:all 300ms ease;display:inline-block}
+.lid-open{transform:translateY(-40px) rotate(-15deg);transform-origin:right center;transition:transform 600ms cubic-bezier(.25,.46,.45,.94)}
+.lid-close{transform:translateY(0) rotate(0);transform-origin:center;transition:transform 800ms cubic-bezier(.34,1.56,.64,1)}
+.seal-stamp{animation:sealStamp 600ms cubic-bezier(.34,1.56,.64,1) forwards}
+.seal-crack{animation:sealCrack 550ms ease-out forwards}
+.sparkle{animation:hBurst 650ms ease-out forwards;pointer-events:none;position:absolute}
+.confetti{animation:confFall 2s ease-out forwards}
+.env-fly{animation:envFly 500ms cubic-bezier(.34,1.56,.64,1) forwards}
+.flap-open{transform:rotateX(180deg)!important;opacity:0!important}
+.jar-lid-float{animation:lidFloat 3s ease-in-out infinite}
+.overlay{position:fixed;inset:0;z-index:1000;background:rgba(30,20,16,.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeUp 350ms ease;overflow-y:auto}
+.footer{text-align:center;padding:20px 20px 32px;font-size:13px;color:var(--ink40);letter-spacing:.02em}
+</style>
+</head>
+<body>
+<div class="hearts-bg" id="hearts"></div>
+<div id="app"></div>
+<script>
+// ─── Firebase Setup ──────────────────────────────────────────────────────────
+// REPLACE with your own Firebase config (free tier is plenty)
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBNRldLW2ctFyoIXnz020yxtvfd_HxONUA",
+  authDomain: "jar-of-letters.firebaseapp.com",
+  databaseURL: "https://jar-of-letters-default-rtdb.firebaseio.com",
+  projectId: "jar-of-letters",
+  storageBucket: "jar-of-letters.firebasestorage.app",
+  messagingSenderId: "239476265066",
+  appId: "1:239476265066:web:5f6141734c0835aa6d7a13",
+  measurementId: "G-6ET0HFFV5D"
+};
+
+let db = null;
+try {
+  firebase.initializeApp(FIREBASE_CONFIG);
+  db = firebase.database();
+} catch(e) {
+  console.warn('Firebase not configured yet. Using localStorage fallback.');
+}
+
+async function saveJar(id, data) {
+  if (db) {
+    await db.ref('jars/' + id).set(data);
+  } else {
+    localStorage.setItem('jar-' + id, JSON.stringify(data));
+  }
+}
+
+async function loadJar(id) {
+  if (db) {
+    const snap = await db.ref('jars/' + id).once('value');
+    return snap.val();
+  } else {
+    const d = localStorage.getItem('jar-' + id);
+    return d ? JSON.parse(d) : null;
+  }
+}
+
+// ─── Data ────────────────────────────────────────────────────────────────────
+const PROMPTS = [
+  {id:"sad",label:"Open when you're sad"},
+  {id:"happy",label:"Open when you're happy"},
+  {id:"miss",label:"Open when you miss me"},
+  {id:"excited",label:"Open when you're excited"},
+  {id:"nice",label:"Open when you want to hear something nice"},
+  {id:"lonely",label:"Open when you feel lonely"},
+  {id:"angry",label:"Open when you're angry"},
+  {id:"sleep",label:"Open when you can't sleep"},
+  {id:"love",label:"Open when you need a reminder of my love"},
+  {id:"bored",label:"Open when you're bored"},
+  {id:"proud",label:"Open when you're proud of yourself"},
+  {id:"grateful",label:"Open when you feel grateful"},
+];
+
+const ENV_COLS=["#F5ECE0","#F0E4D8","#F2E8DC","#F7EDE3","#F3E6D6"];
+
+function genId(){const c="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";let r="";for(let i=0;i<8;i++)r+=c[Math.floor(Math.random()*c.length)];return r}
+
+// ─── State ───────────────────────────────────────────────────────────────────
+let state = {
+  screen: 'loading',
+  sender: '', recip: '',
+  selP: [], letters: {},
+  curIdx: 0,
+  jarId: null, jarData: null,
+  opened: new Set(),
+  viewing: null,
+  copied: false,
+  sealP: 'collecting', colCt: 0,
+};
+
+// ─── Floating Hearts ─────────────────────────────────────────────────────────
+function initHearts(){
+  const c=document.getElementById('hearts');
+  const data=[[7,2.3,16,11,.06],[14,4.6,19,14,.08],[27,6.9,22,17,.1],[34,9.2,25,13,.07],
+    [41,0,18,20,.09],[48,11.5,28,15,.11],[55,4,21,12,.06],[62,7,24,19,.08],
+    [69,1.5,17,16,.1],[76,10,26,22,.07],[83,5.5,20,10,.09],[90,3,23,18,.06],
+    [20,8,27,24,.08],[50,12,15,21,.07]];
+  data.forEach(([l,d,du,s,o])=>{
+    const sp=document.createElement('span');
+    sp.className='fh';sp.textContent='♥';
+    sp.style.cssText=`left:${l}%;font-size:${s}px;opacity:${o};animation-delay:${d}s;animation-duration:${du}s`;
+    c.appendChild(sp);
+  });
+}
+
+// ─── SVG Helpers ─────────────────────────────────────────────────────────────
+function waxSealSVG(size, extra=''){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" ${extra}>
+    <defs><filter id="wSh"><feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#3a0808" floodOpacity=".32"/></filter>
+    <radialGradient id="wG" cx="40%" cy="35%"><stop offset="0%" stop-color="#E25555"/><stop offset="60%" stop-color="#B83A3A"/><stop offset="100%" stop-color="#6E1414"/></radialGradient>
+    <radialGradient id="wSn" cx="30%" cy="25%"><stop offset="0%" stop-color="rgba(255,255,255,.25)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs>
+    <path d="M50,5 C58,3 65,10 72,8 C79,6 82,14 88,18 C94,22 95,30 97,38 C99,46 95,52 95,60 C95,68 90,73 85,78 C80,83 73,85 66,88 C59,91 52,97 45,95 C38,93 32,88 26,84 C20,80 12,78 8,72 C4,66 5,58 4,50 C3,42 6,36 10,30 C14,24 18,18 25,14 C32,10 42,7 50,5Z" fill="url(#wG)" filter="url(#wSh)"/>
+    <path d="M50,5 C58,3 65,10 72,8 C79,6 82,14 88,18 C94,22 95,30 97,38 C99,46 95,52 95,60 C95,68 90,73 85,78 C80,83 73,85 66,88 C59,91 52,97 45,95 C38,93 32,88 26,84 C20,80 12,78 8,72 C4,66 5,58 4,50 C3,42 6,36 10,30 C14,24 18,18 25,14 C32,10 42,7 50,5Z" fill="url(#wSn)"/>
+    ${Array.from({length:12}).map((_,i)=>{const a=i*30*Math.PI/180;return`<circle cx="${50+Math.cos(a)*28}" cy="${50+Math.sin(a)*28}" r="3" fill="none" stroke="#6E1414" stroke-width="1.2" opacity=".5"/>`}).join('')}
+    <path d="M50,62 C50,62 35,50 35,42 C35,36 40,33 45,35 C48,36 50,39 50,39 C50,39 52,36 55,35 C60,33 65,36 65,42 C65,50 50,62 50,62Z" fill="none" stroke="#3a0808" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M51,61 C51,61 36,49 36,41 C36,35 41,32 46,34 C49,35 51,38 51,38 C51,38 53,35 56,34 C61,32 66,35 66,41 C66,49 51,61 51,61Z" fill="none" stroke="rgba(255,200,200,.3)" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function jarSVG(size, count, sealed){
+  const positions=[[105,250,-14],[145,238,10],[125,218,-6],[160,205,18],[110,195,-10],[150,182,8],[120,170,-16],[155,158,12],[130,148,-4],[140,136,6],[115,128,-12],[155,120,14]].slice(0,Math.max(count,3));
+  const u='jx'+size;
+  let envs=positions.map(([x,y,r],i)=>`<g transform="translate(${x},${y}) rotate(${r})"><rect x="-22" y="-14" width="44" height="28" rx="3" fill="${ENV_COLS[i%5]}" stroke="var(--border)" stroke-width=".7"/><path d="M-22,-14 L0,4 L22,-14" fill="none" stroke="var(--border)" stroke-width=".6"/><circle cx="0" cy="8" r="5.5" fill="url(#${u}ms)"/></g>`).join('');
+  let sealMark=sealed?`<g transform="translate(140,94)"><ellipse cx="0" cy="0" rx="16" ry="12" fill="url(#${u}ms)"/><path d="M0,4 C0,4 -5.5,-1 -5.5,-4 C-5.5,-6.5 -3.5,-8 -1.5,-7 C0,-6 0,-4.5 0,-4.5 C0,-4.5 0,-6 1.5,-7 C3.5,-8 5.5,-6.5 5.5,-4 C5.5,-1 0,4 0,4Z" fill="none" stroke="#3a0808" stroke-width="1" opacity=".5"/></g>`:'';
+  let lidClass=sealed?'':'class="jar-lid-float"';
+  return `<svg width="${size}" height="${Math.round(size*340/280)}" viewBox="0 0 280 340">
+    <defs>
+      <linearGradient id="${u}b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(255,255,255,.5)"/><stop offset="30%" stop-color="rgba(255,255,255,.2)"/><stop offset="70%" stop-color="rgba(255,255,255,.12)"/><stop offset="100%" stop-color="rgba(255,255,255,.35)"/></linearGradient>
+      <linearGradient id="${u}s" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="rgba(255,255,255,.6)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient>
+      <linearGradient id="${u}l" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#F5ECE0"/><stop offset="100%" stop-color="#E8DDD0"/></linearGradient>
+      <clipPath id="${u}c"><path d="M68,108 L58,278 C58,300 90,318 140,318 C190,318 222,300 222,278 L212,108 Z"/></clipPath>
+      <filter id="${u}sh"><feDropShadow dx="0" dy="6" stdDeviation="12" floodColor="#1E1410" floodOpacity=".08"/></filter>
+      <radialGradient id="${u}ms" cx="40%" cy="35%"><stop offset="0%" stop-color="#E25555"/><stop offset="100%" stop-color="#8B2020"/></radialGradient>
+      <radialGradient id="${u}g" cx="50%" cy="60%"><stop offset="0%" stop-color="rgba(184,58,58,.06)"/><stop offset="100%" stop-color="rgba(184,58,58,0)"/></radialGradient>
+    </defs>
+    <ellipse cx="140" cy="280" rx="100" ry="30" fill="url(#${u}g)"/>
+    <path d="M68,108 L58,278 C58,300 90,318 140,318 C190,318 222,300 222,278 L212,108 Z" fill="url(#${u}b)" stroke="var(--border)" stroke-width="1.8" filter="url(#${u}sh)"/>
+    <g clip-path="url(#${u}c)">${envs}</g>
+    <rect x="75" y="115" width="12" height="155" rx="6" fill="url(#${u}s)" opacity=".5"/>
+    <rect x="92" y="130" width="5" height="100" rx="2.5" fill="url(#${u}s)" opacity=".25"/>
+    <rect x="62" y="94" width="156" height="18" rx="6" fill="url(#${u}l)" stroke="var(--border)" stroke-width="1.5"/>
+    <g ${lidClass}><path d="M82,94 L90,68 C90,56 112,46 140,46 C168,46 190,56 190,68 L198,94" fill="url(#${u}l)" stroke="var(--border)" stroke-width="1.5"/><ellipse cx="140" cy="50" rx="16" ry="9" fill="var(--envB)" stroke="var(--border)" stroke-width="1"/><text x="140" y="54" text-anchor="middle" font-size="10" fill="var(--red)" opacity=".7">♥</text></g>
+    ${sealMark}
+  </svg>`;
+}
+
+// ─── Render Functions ────────────────────────────────────────────────────────
+const $=id=>document.getElementById(id);
+const app=()=>$('app');
+
+function render(){
+  switch(state.screen){
+    case 'loading': renderLoading(); break;
+    case 'landing': renderLanding(); break;
+    case 'names': renderNames(); break;
+    case 'select': renderSelect(); break;
+    case 'write': renderWrite(); break;
+    case 'seal': renderSeal(); break;
+    case 'recipient': renderRecipient(); break;
+  }
+}
+
+function renderLoading(){
+  app().innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center">${waxSealSVG(56,'style="animation:pulse 2.5s ease-in-out infinite"')}</div>`;
+}
+
+function renderLanding(){
+  app().innerHTML=`
+  <div class="screen" style="max-width:520px;margin:0 auto;animation:fadeUp 700ms ease">
+    <div style="background:var(--paper);border:1.5px solid var(--border);border-radius:12px;padding:52px 44px 48px;position:relative;box-shadow:0 8px 40px rgba(30,20,16,.06);overflow:hidden">
+      <div style="position:absolute;left:44px;top:0;bottom:0;width:1.5px;background:rgba(184,58,58,.07)"></div>
+      <div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(transparent,transparent 34px,rgba(30,20,16,.05) 34px,rgba(30,20,16,.05) 35px)"></div>
+      <div style="position:relative;padding-left:24px">
+        <div style="display:flex;justify-content:center;margin-bottom:24px">${jarSVG(140,6,true)}</div>
+        <h1 style="font-family:'Playfair Display',serif;font-weight:500;font-size:44px;text-align:center;line-height:1.15;margin-bottom:16px">Jar of Letters</h1>
+        <div style="text-align:center;margin-bottom:28px">
+          <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:22px;line-height:1.5;margin-bottom:16px">Because love deserves to be held, not just read.</p>
+          <p style="font-size:16px;color:var(--ink60);line-height:1.8;max-width:380px;margin:0 auto">Send a jar filled with pieces of your heart, for them to open whenever they need to feel you close.</p>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px">
+          <div style="height:1px;width:40px;background:var(--border)"></div>
+          <div style="opacity:.25">${waxSealSVG(32)}</div>
+          <div style="height:1px;width:40px;background:var(--border)"></div>
+        </div>
+        <div style="text-align:center;margin-top:24px">
+          <button class="btn btn-p" onclick="go('names')" style="font-size:17px;padding:16px 48px">Create a Jar ♥</button>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:12px;color:var(--ink40)">Free forever. No sign-up needed.</p>
+  </div>
+  <div class="footer">Made with <span style="color:var(--red)">♥</span> by Karthika for Madhavan</div>`;
+}
+
+function renderNames(){
+  app().innerHTML=`
+  <div class="screen" style="max-width:420px;margin:0 auto">
+    <button class="btn btn-s" onclick="go('landing')" style="margin-bottom:32px;padding:8px 16px;font-size:13px">← Back</button>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:36px;margin-bottom:8px">Who's writing?</h2>
+    <p style="font-size:15px;color:var(--ink60);margin-bottom:32px;font-weight:300">Tell us your name and who these letters are for.</p>
+    <div style="margin-bottom:20px"><label style="font-size:13px;color:var(--ink60);display:block;margin-bottom:6px">Your name</label><input type="text" id="inp-sender" placeholder="Your name" value="${esc(state.sender)}"></div>
+    <div style="margin-bottom:32px"><label style="font-size:13px;color:var(--ink60);display:block;margin-bottom:6px">Recipient's name</label><input type="text" id="inp-recip" placeholder="Their name" value="${esc(state.recip)}"></div>
+    <button class="btn btn-p" id="btn-next" onclick="submitNames()">Choose Envelopes →</button>
+  </div>
+  <div class="footer">Made with <span style="color:var(--red)">♥</span> by Karthika for Madhavan</div>`;
+  $('inp-sender').addEventListener('input',e=>{state.sender=e.target.value;checkNames()});
+  $('inp-recip').addEventListener('input',e=>{state.recip=e.target.value;checkNames()});
+  checkNames();
+}
+
+function checkNames(){$('btn-next').disabled=!state.sender.trim()||!state.recip.trim()}
+
+function submitNames(){if(state.sender.trim()&&state.recip.trim())go('select')}
+
+function renderSelect(){
+  let cards=PROMPTS.map(p=>{
+    let sel=state.selP.includes(p.id);
+    return `<div class="ecard ${sel?'sel':''}" onclick="toggleP('${p.id}')">
+      ${sel?'<div style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:var(--red);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;box-shadow:0 2px 8px rgba(184,58,58,.3)">✓</div>':''}
+      ${waxSealSVG(40)}
+      <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:16px;line-height:1.3">${esc(p.label)}</span>
+    </div>`;
+  }).join('');
+  app().innerHTML=`
+  <div class="screen">
+    <button class="btn btn-s" onclick="go('names')" style="margin-bottom:32px;padding:8px 16px;font-size:13px">← Back</button>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:36px;margin-bottom:8px">Choose your envelopes</h2>
+    <p style="font-size:15px;color:var(--ink60);margin-bottom:32px;font-weight:300">Pick the moments you want to write for. Select at least 3.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px">${cards}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:14px;color:var(--ink40)">${state.selP.length} selected</span>
+      <button class="btn btn-p" id="btn-write" onclick="startWrite()" ${state.selP.length<3?'disabled':''}>Write Letters →</button>
+    </div>
+  </div>
+  <div class="footer">Made with <span style="color:var(--red)">♥</span> by Karthika for Madhavan</div>`;
+}
+
+function toggleP(id){
+  if(state.selP.includes(id))state.selP=state.selP.filter(x=>x!==id);
+  else state.selP.push(id);
+  renderSelect();
+}
+
+function startWrite(){state.curIdx=0;go('write')}
+
+function renderWrite(){
+  const pid=state.selP[state.curIdx];
+  const pr=PROMPTS.find(p=>p.id===pid);
+  const val=state.letters[pid]||'';
+  const allDone=state.selP.every(id=>(state.letters[id]||'').trim());
+  const isLast=state.curIdx>=state.selP.length-1;
+  let dots=state.selP.map((id,i)=>`<span class="pdot" style="background:${i===state.curIdx?'var(--red)':(state.letters[id]||'').trim()?'var(--redLight)':'var(--border)'};transform:${i===state.curIdx?'scale(1.3)':'scale(1)'}"></span>`).join('');
+  app().innerHTML=`
+  <div class="screen" style="max-width:540px;margin:0 auto">
+    <button class="btn btn-s" onclick="prevWrite()" style="margin-bottom:24px;padding:8px 16px;font-size:13px">← ${state.curIdx>0?'Previous':'Back'}</button>
+    <div style="display:flex;gap:6px;margin-bottom:24px;justify-content:center">${dots}</div>
+    <div style="text-align:center;margin-bottom:8px;font-size:13px;color:var(--ink40)">Letter ${state.curIdx+1} of ${state.selP.length}</div>
+    <h3 style="font-family:'Playfair Display',serif;font-style:italic;font-size:24px;text-align:center;margin-bottom:24px">${esc(pr.label)}</h3>
+    <div style="background:var(--paper);border-radius:8px;border:1.5px solid var(--border);padding:24px 24px 24px 0;position:relative;overflow:hidden">
+      <div style="position:absolute;left:46px;top:0;bottom:0;width:1.5px;background:rgba(184,58,58,.07)"></div>
+      <textarea id="ta" placeholder='Write your letter for "${esc(pr.label)}"...'>${esc(val)}</textarea>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px">
+      <span style="font-size:13px;color:var(--ink40)">Signing as ${esc(state.sender)}</span>
+      ${isLast?
+        `<button class="btn btn-p" id="btn-seal" onclick="startSeal()" ${allDone?'':'disabled'} style="animation:${allDone?'pulse 2.5s ease-in-out infinite':'none'}">Seal the Jar ♥</button>`:
+        `<button class="btn btn-p" id="btn-nxt" onclick="nextWrite()" ${val.trim()?'':'disabled'} style="animation:${val.trim()?'pulse 2.5s ease-in-out infinite':'none'}">Next Letter →</button>`
+      }
+    </div>
+  </div>
+  <div class="footer">Made with <span style="color:var(--red)">♥</span> by Karthika for Madhavan</div>`;
+  $('ta').addEventListener('input',e=>{
+    state.letters[pid]=e.target.value;
+    const b=$(isLast?'btn-seal':'btn-nxt');
+    if(b){
+      const ok=isLast?state.selP.every(id=>(state.letters[id]||'').trim()):e.target.value.trim();
+      b.disabled=!ok;
+      b.style.animation=ok?'pulse 2.5s ease-in-out infinite':'none';
+    }
+  });
+}
+
+function prevWrite(){if(state.curIdx>0){state.curIdx--;go('write')}else go('select')}
+function nextWrite(){if((state.letters[state.selP[state.curIdx]]||'').trim()){state.curIdx++;go('write')}}
+
+async function startSeal(){go('seal');await runSeal()}
+
+async function runSeal(){
+  state.sealP='collecting';state.colCt=0;renderSeal();
+  for(let i=0;i<state.selP.length;i++){
+    await wait(350);state.colCt=i+1;renderSealJar();updateSealText();
+  }
+  await wait(500);state.sealP='sealing';renderSealJar();updateSealText();
+  await wait(900);state.sealP='stamping';renderSealJar();updateSealText();
+  const id=genId();
+  const data={sender:state.sender,recipient:state.recip,letters:state.selP.map(p=>({promptId:p,text:state.letters[p]||''})),createdAt:new Date().toISOString()};
+  await saveJar(id,data);
+  state.jarId=id;state.jarData=data;
+  await wait(1100);state.sealP='done';renderSeal();
+}
+
+function renderSeal(){
+  const titles={collecting:'Collecting your letters...',sealing:'Sealing the jar...',stamping:'Adding the finishing touch...',done:'Your jar is ready!'};
+  const subs={collecting:`${state.colCt} of ${state.selP.length} letters placed`,sealing:'Keeping your words safe...',stamping:'Sealed with love...',done:`${state.selP.length} love letters for ${esc(state.recip)}`};
+  const shareUrl=state.jarId?`${location.origin}${location.pathname}#jar=${state.jarId}`:'';
+  
+  let doneHTML='';
+  if(state.sealP==='done'){
+    const confetti=Array.from({length:8}).map((_,i)=>`<span class="confetti" style="position:absolute;top:-60px;left:${8+i*12}%;font-size:${14+(i*3)%10}px;color:${i%3===0?'var(--red)':i%3===1?'var(--redLight)':'var(--ink40)'};animation-delay:${i*120}ms;opacity:0">♥</span>`).join('');
+    doneHTML=`
+    <div style="animation:fadeUp 600ms ease">
+      <div style="position:relative;height:0;overflow:visible">${confetti}</div>
+      <div style="display:flex;justify-content:center;margin-bottom:20px">${jarSVG(160,state.selP.length,true)}</div>
+      <div style="background:var(--paper);border:1.5px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px">
+        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:22px;margin-bottom:4px">From ${esc(state.sender)}, to ${esc(state.recip)}</div>
+        <div style="font-size:12px;color:var(--ink40)">${state.selP.length} letters sealed with love • ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+      </div>
+      <div style="background:var(--paper);border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <input type="text" id="share-url" value="${shareUrl}" readonly style="flex:1;border:none;background:transparent;font-size:13px;color:var(--ink60);padding:0">
+        <button class="btn" onclick="copyLink()" id="btn-copy" style="background:var(--red);color:white;padding:8px 16px;font-size:13px;white-space:nowrap">Copy Link</button>
+      </div>
+      <div style="text-align:center">
+        <button class="btn btn-p" onclick="copyLink()" id="btn-share" style="animation:pulse 2.5s ease-in-out infinite">Share with ${esc(state.recip)} ♥</button>
+        <div style="margin-top:16px"><button class="btn btn-s" onclick="goHome()" style="padding:10px 24px;font-size:13px">← Back to home</button></div>
+      </div>
+    </div>`;
+  }
+
+  let jarHTML='';
+  if(state.sealP!=='done') jarHTML=`<div id="seal-jar" style="position:relative;width:260px;margin:0 auto 20px"></div>`;
+
+  let progHTML='';
+  if(state.sealP!=='done'){
+    const w=state.sealP==='collecting'?`${(state.colCt/state.selP.length)*60}%`:state.sealP==='sealing'?'80%':'100%';
+    progHTML=`<div style="width:100%;max-width:220px;height:3px;border-radius:2px;background:var(--border);margin:0 auto 20px;overflow:hidden"><div style="height:100%;border-radius:2px;background:var(--red);transition:width 350ms ease;width:${w}"></div></div>`;
+  }
+
+  app().innerHTML=`
+  <div class="screen" style="text-align:center;max-width:480px;margin:0 auto;padding-top:10px">
+    <h2 id="seal-title" style="font-family:'Playfair Display',serif;font-weight:500;font-size:34px;margin-bottom:6px">${titles[state.sealP]}</h2>
+    <p id="seal-sub" style="font-size:15px;color:var(--ink60);margin-bottom:24px;font-weight:300">${subs[state.sealP]}</p>
+    ${jarHTML}${progHTML}${doneHTML}
+  </div>
+  <div class="footer">Made with <span style="color:var(--red)">♥</span> by Karthika for Madhavan</div>`;
+  if(state.sealP!=='done')renderSealJar();
+}
+
+function updateSealText(){
+  const titles={collecting:'Collecting your letters...',sealing:'Sealing the jar...',stamping:'Adding the finishing touch...'};
+  const subs={collecting:`${state.colCt} of ${state.selP.length} letters placed`,sealing:'Keeping your words safe...',stamping:'Sealed with love...'};
+  const t=$('seal-title');const s=$('seal-sub');
+  if(t)t.textContent=titles[state.sealP]||'';
+  if(s)s.textContent=subs[state.sealP]||'';
+}
+
+function renderSealJar(){
+  const el=$('seal-jar');if(!el)return;
+  // Build animated jar with envelopes appearing
+  const positions=[[105,255,-14],[155,245,10],[125,225,-6],[160,210,18],[110,195,-10],[150,180,8],[120,165,-16],[155,152,12],[130,140,-4],[140,128,6],[115,118,-12],[155,110,14]];
+  let envs=state.selP.map((pid,i)=>{
+    if(i>=state.colCt&&state.sealP==='collecting')return '';
+    const[x,y,r]=positions[i%positions.length];
+    return `<g transform="translate(${x},${y}) rotate(${r})" class="env-fly" style="animation-delay:${i*50}ms"><rect x="-22" y="-14" width="44" height="28" rx="3" fill="${ENV_COLS[i%5]}" stroke="var(--border)" stroke-width=".7"/><path d="M-22,-14 L0,4 L22,-14" fill="none" stroke="var(--border)" stroke-width=".6"/><circle cx="0" cy="8" r="5.5" fill="url(#aMS)"/></g>`;
+  }).join('');
+  let lidCls=state.sealP==='collecting'?'lid-open':'lid-close';
+  let sealMark=(state.sealP==='stamping'||state.sealP==='done')?`<g class="seal-stamp" style="transform-origin:140px 94px"><g transform="translate(140,94)"><ellipse cx="0" cy="0" rx="18" ry="13" fill="url(#wG)" filter="url(#wSh)"/><ellipse cx="0" cy="0" rx="18" ry="13" fill="url(#wSn)"/><path d="M0,5 C0,5 -6.5,0 -6.5,-3 C-6.5,-5.5 -4,-7 -2,-6 C0,-5 0,-3.5 0,-3.5 C0,-3.5 0,-5 2,-6 C4,-7 6.5,-5.5 6.5,-3 C6.5,0 0,5 0,5Z" fill="none" stroke="#3a0808" stroke-width="1.2" opacity=".5"/></g></g>`:'';
+  
+  el.innerHTML=`<svg width="260" height="340" viewBox="0 0 280 340">
+    <defs>
+      <linearGradient id="aJB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(255,255,255,.5)"/><stop offset="30%" stop-color="rgba(255,255,255,.2)"/><stop offset="70%" stop-color="rgba(255,255,255,.12)"/><stop offset="100%" stop-color="rgba(255,255,255,.35)"/></linearGradient>
+      <linearGradient id="aJS" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="rgba(255,255,255,.6)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient>
+      <linearGradient id="aLG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#F5ECE0"/><stop offset="100%" stop-color="#E8DDD0"/></linearGradient>
+      <clipPath id="aJC"><path d="M68,108 L58,278 C58,300 90,318 140,318 C190,318 222,300 222,278 L212,108 Z"/></clipPath>
+      <filter id="aJSh"><feDropShadow dx="0" dy="6" stdDeviation="12" floodColor="#1E1410" floodOpacity=".08"/></filter>
+      <radialGradient id="aMS" cx="40%" cy="35%"><stop offset="0%" stop-color="#E25555"/><stop offset="100%" stop-color="#8B2020"/></radialGradient>
+      <radialGradient id="aJGl" cx="50%" cy="60%"><stop offset="0%" stop-color="rgba(184,58,58,.06)"/><stop offset="100%" stop-color="rgba(184,58,58,0)"/></radialGradient>
+    </defs>
+    <ellipse cx="140" cy="280" rx="100" ry="30" fill="url(#aJGl)"/>
+    <path d="M68,108 L58,278 C58,300 90,318 140,318 C190,318 222,300 222,278 L212,108 Z" fill="url(#aJB)" stroke="var(--border)" stroke-width="1.8" filter="url(#aJSh)"/>
+    <g clip-path="url(#aJC)">${envs}</g>
+    <rect x="75" y="115" width="12" height="155" rx="6" fill="url(#aJS)" opacity=".5"/>
+    <rect x="92" y="130" width="5" height="100" rx="2.5" fill="url(#aJS)" opacity=".25"/>
+    <rect x="62" y="94" width="156" height="18" rx="6" fill="url(#aLG)" stroke="var(--border)" stroke-width="1.5"/>
+    <g class="${lidCls}"><path d="M82,94 L90,68 C90,56 112,46 140,46 C168,46 190,56 190,68 L198,94" fill="url(#aLG)" stroke="var(--border)" stroke-width="1.5"/><ellipse cx="140" cy="50" rx="16" ry="9" fill="var(--envB)" stroke="var(--border)" stroke-width="1"/><text x="140" y="54" text-anchor="middle" font-size="10" fill="var(--red)" opacity=".7">♥</text></g>
+    ${sealMark}
+  </svg>`;
+}
+
+function copyLink(){
+  const url=`${location.origin}${location.pathname}#jar=${state.jarId}`;
+  navigator.clipboard.writeText(url).then(()=>{
+    const b=$('btn-copy');const s=$('btn-share');
+    if(b){b.style.background='#4CAF50';b.textContent='Copied! ✓'}
+    if(s)s.textContent='Link Copied! ✓';
+    setTimeout(()=>{
+      if(b){b.style.background='var(--red)';b.textContent='Copy Link'}
+      if(s)s.textContent=`Share with ${state.recip} ♥`;
+    },2000);
+  });
+}
+
+function renderRecipient(){
+  const d=state.jarData;
+  let cards=d.letters.map((l,i)=>{
+    const pr=PROMPTS.find(p=>p.id===l.promptId);
+    const op=state.opened.has(l.promptId);
+    return `<div class="renv" onclick="viewLetter(${i})" style="opacity:${op?.65:1}">
+      ${op?'<div style="position:absolute;top:10px;right:12px;font-size:11px;color:var(--ink40)">opened</div>':''}
+      <div style="opacity:${op?.4:1}">${waxSealSVG(48)}</div>
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:18px;line-height:1.3;margin-top:12px">${esc(pr?.label||'')}</div>
+    </div>`;
+  }).join('');
+
+  app().innerHTML=`
+  <div class="screen">
+    <div style="text-align:center;margin-bottom:40px">
+      <div style="display:flex;justify-content:center;margin-bottom:12px">${jarSVG(120,d.letters.length,true)}</div>
+      <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:36px;margin-bottom:8px">${esc(d.recipient)}'s Jar of Letters</h2>
+      <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--ink60)">with love from ${esc(d.sender)} ♥</p>
+      <p style="font-size:13px;color:var(--ink40);margin-top:12px">${state.opened.size} of ${d.letters.length} letters opened</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px">${cards}</div>
+    <div style="text-align:center;margin-top:48px;padding-top:32px;border-top:1.5px solid var(--border)">
+      <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--ink60);margin-bottom:16px">Want to write letters back?</p>
+      <button class="btn btn-p" onclick="startNewJar()" style="font-size:15px;padding:14px 36px">Make a jar for ${esc(d.sender)} ♥</button>
+    </div>
+  </div>
+  <div class="footer">Made with <span style="color:var(--red)">♥</span> by Karthika for Madhavan</div>`;
+}
+
+function goHome(){
+  state.sender='';state.recip='';state.selP=[];state.letters={};state.curIdx=0;
+  state.jarId=null;state.jarData=null;state.opened=new Set();state.viewing=null;
+  state.copied=false;state.sealP='collecting';state.colCt=0;
+  history.replaceState(null,'',location.pathname);
+  go('landing');
+}
+
+function startNewJar(){
+  // Pre-fill sender as the recipient, and recipient as the sender
+  const oldSender = state.jarData.sender;
+  const oldRecip = state.jarData.recipient;
+  state.sender = oldRecip;
+  state.recip = oldSender;
+  state.selP = [];
+  state.letters = {};
+  state.curIdx = 0;
+  state.jarId = null;
+  state.jarData = null;
+  state.opened = new Set();
+  state.viewing = null;
+  state.copied = false;
+  state.sealP = 'collecting';
+  state.colCt = 0;
+  // Clear the hash so they start fresh
+  history.replaceState(null, '', location.pathname);
+  go('select');
+}
+
+function viewLetter(idx){
+  state.viewing=state.jarData.letters[idx];
+  renderEnvelope();
+}
+
+function renderEnvelope(){
+  const l=state.viewing;
+  const pr=PROMPTS.find(p=>p.id===l.promptId);
+  const overlay=document.createElement('div');
+  overlay.id='env-overlay';
+  overlay.className='overlay';
+  overlay.innerHTML=`
+  <div style="width:100%;max-width:440px;position:relative">
+    <div id="env-box" style="background:linear-gradient(155deg,var(--envF),var(--envB));border-radius:12px;min-height:280px;max-height:85vh;position:relative;box-shadow:0 20px 60px rgba(30,20,16,.25);overflow-y:auto;overflow-x:hidden;transition:min-height 550ms cubic-bezier(.25,.46,.45,.94)">
+      <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,transparent 48%,rgba(0,0,0,.03) 49%,transparent 51%),linear-gradient(225deg,transparent 48%,rgba(0,0,0,.03) 49%,transparent 51%)"></div>
+      <div id="env-flap" style="position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,var(--envB),var(--envF));clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;transition:transform 550ms cubic-bezier(.25,.46,.45,.94),opacity 300ms ease;z-index:3;border-bottom:1px solid var(--border)"></div>
+      <div id="env-seal" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;cursor:pointer" onclick="crackSeal()">
+        ${waxSealSVG(72)}
+      </div>
+      <div id="env-label" style="position:absolute;bottom:30px;left:0;right:0;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:20px">${esc(pr.label)}</div>
+        <div style="font-size:12px;color:var(--ink40);margin-top:8px">Tap the seal to open</div>
+      </div>
+      <div id="env-letter" style="display:none;padding:40px 30px 30px;animation:fadeUp 450ms ease">
+        <div style="text-align:center;margin-bottom:16px;opacity:.4">${waxSealSVG(36)}</div>
+        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--red);text-align:center;margin-bottom:20px">${esc(pr.label)}</div>
+        <div style="background:var(--paper);border-radius:8px;padding:24px 24px 24px 0;position:relative;min-height:180px">
+          <div style="position:absolute;left:46px;top:0;bottom:0;width:1.5px;background:rgba(184,58,58,.07)"></div>
+          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:20px;line-height:35px;padding-left:60px;background:repeating-linear-gradient(transparent,transparent 34px,rgba(30,20,16,.08) 34px,rgba(30,20,16,.08) 35px);white-space:pre-wrap;word-break:break-word">${esc(l.text)}</div>
+          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--red);text-align:right;margin-top:24px;padding-right:10px">Forever yours, ${esc(state.jarData.sender)} ♥</div>
+        </div>
+        <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--ink40)">Tap outside to close</div>
+      </div>
+    </div>
+  </div>`;
+  overlay.addEventListener('click',e=>{
+    if(e.target===overlay||e.target.id==='env-overlay'){closeEnvelope()}
+  });
+  document.body.appendChild(overlay);
+}
+
+function crackSeal(){
+  const seal=$('env-seal');const flap=$('env-flap');const label=$('env-label');const letter=$('env-letter');const box=$('env-box');
+  if(!seal)return;
+  // Sparkles
+  const sp=document.createElement('div');sp.style.cssText='position:absolute;top:50%;left:50%;z-index:5';
+  Array.from({length:12}).forEach((_,i)=>{
+    const a=i*30*Math.PI/180;const s=document.createElement('span');
+    s.className='sparkle';s.textContent=i%2===0?'♥':'✦';
+    s.style.cssText=`font-size:16px;color:${i%2===0?'var(--red)':'#E8C547'};animation-delay:${Math.floor(Math.random()*100)}ms;--dx:${Math.cos(a)*(40+Math.random()*60)}px;--dy:${Math.sin(a)*(40+Math.random()*60)}px;top:0;left:0`;
+    sp.appendChild(s);
+  });
+  seal.parentElement.appendChild(sp);
+  seal.querySelector('svg').classList.add('seal-crack');
+  setTimeout(()=>{flap.classList.add('flap-open')},550);
+  setTimeout(()=>{
+    seal.style.display='none';label.style.display='none';sp.remove();
+    flap.style.zIndex='0';flap.style.opacity='.3';
+    box.style.minHeight='400px';letter.style.display='block';
+  },1100);
+}
+
+function closeEnvelope(){
+  state.opened.add(state.viewing.promptId);
+  state.viewing=null;
+  const o=$('env-overlay');if(o)o.remove();
+  renderRecipient();
+}
+
+// ─── Navigation ──────────────────────────────────────────────────────────────
+function go(screen){state.screen=screen;render();window.scrollTo(0,0)}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+async function init(){
+  initHearts();
+  const hash=location.hash;
+  const m=hash.match(/#jar=([A-Za-z0-9]{8})/);
+  if(m){
+    const data=await loadJar(m[1]);
+    if(data){
+      state.jarData=data;state.jarId=m[1];state.screen='recipient';
+    } else {
+      state.screen='landing';
+    }
+  } else {
+    state.screen='landing';
+  }
+  render();
+}
+
+init();
+</script>
+</body>
+</html>
