@@ -23,41 +23,37 @@
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Caveat:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <style>
 :root{
-  --paper:#FDF6E8; --paper-hi:#FFFDF7; --paper-lo:#F7ECD6; --edge:#2A2521; --edge-soft:#E8DAC0;
-  --ink:#2A2521; --ink70:#5C5148; --ink45:#93867A;
-  --rose:#F2769C; --rose-deep:#C43C6B; --rose-soft:#FDE0E9;
-  --blue:#3B9BDC; --sage:#56A84F; --butter:#F5B921; --lilac:#7454C8; --clay:#F0862A; --red:#E5443B;
-  --r-lg:20px; --r-md:16px; --r-sm:10px;
-  --sh-card:4px 4px 0 rgba(42,37,33,.14);
-  --sh-lift:7px 8px 0 rgba(42,37,33,.20);
+  --paper:#FFF7EC; --paper-hi:#FFFFFF; --paper-lo:#FDEFDD; --edge:#2E2233; --edge-soft:#EADCC9;
+  --ink:#2E2233; --ink70:#5E4C60; --ink45:#9C8A9C;
+  --rose:#FF5F9E; --rose-deep:#D92C6E; --rose-soft:#FFE1EC;
+  --blue:#3FA9E0; --sage:#2FB8A0; --butter:#F5A524; --lilac:#7C5CE0; --clay:#FF6B5A; --red:#E4534A;
+  --r-lg:26px; --r-md:20px; --r-sm:14px;
+  --sh-card:0 4px 0 rgba(46,34,51,.10);
+  --sh-lift:0 10px 28px rgba(46,34,51,.14);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
   background:var(--paper);
   background-image:
-    radial-gradient(1000px 620px at 12% -8%, rgba(228,115,138,.13), transparent 62%),
-    radial-gradient(820px 540px at 92% 2%, rgba(168,149,207,.11), transparent 60%),
-    radial-gradient(900px 640px at 50% 108%, rgba(143,180,154,.13), transparent 62%);
+    radial-gradient(900px 520px at 8% -6%, rgba(255,95,158,.16), transparent 60%),
+    radial-gradient(760px 480px at 96% 2%, rgba(124,92,224,.11), transparent 60%),
+    radial-gradient(820px 560px at 50% 106%, rgba(47,184,160,.12), transparent 62%);
   background-attachment:fixed;
   font-family:'Nunito',system-ui,sans-serif; color:var(--ink);
   min-height:100vh; overflow-x:hidden; -webkit-font-smoothing:antialiased;
   padding-bottom:104px;
 }
 /* woven paper grain, drawn once and reused everywhere */
-body::before{
-  content:''; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
-  mix-blend-mode:multiply;
-}
-h1,h2,h3{font-family:'Baloo 2',system-ui,cursive;font-weight:800;line-height:1.06;letter-spacing:-.3px;overflow-wrap:anywhere}
+
+h1,h2,h3{font-family:'Fredoka',system-ui,sans-serif;font-weight:600;letter-spacing:-.01em;line-height:1.12;overflow-wrap:anywhere}
 p,span,div,button,a,.label{overflow-wrap:break-word}
-.hand{font-family:'Baloo 2',system-ui,cursive;font-weight:700;line-height:1.14}
+.hand{font-family:'Fredoka',system-ui,sans-serif;font-weight:500;line-height:1.18}
 .script{font-family:'Caveat',cursive;font-weight:500}
 
 /* ── motion ─────────────────────────────────────────────── */
@@ -92,31 +88,20 @@ p,span,div,button,a,.label{overflow-wrap:break-word}
 
 /* ── paper surfaces ─────────────────────────────────────── */
 .sheet{
-  position:relative;background:linear-gradient(163deg,var(--paper-hi),var(--paper-lo));
-  border:3px solid var(--ink); border-radius:var(--r-md); box-shadow:var(--sh-card);
-}
-.sheet::after{
-  content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23f)' opacity='.5'/%3E%3C/svg%3E");
-  opacity:.34; mix-blend-mode:multiply; border-radius:inherit;
+  position:relative;background:var(--paper-hi);
+  border:2.5px solid var(--ink); border-radius:var(--r-md); box-shadow:var(--sh-card);
 }
 .ruled{background-image:repeating-linear-gradient(transparent,transparent 33px,rgba(59,48,40,.10) 33px,rgba(59,48,40,.10) 34px)}
-.airmail::before{
-  content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; padding:3.5px;
-  background:repeating-linear-gradient(45deg,#D98090 0 7px,transparent 7px 14px,#89A9C6 14px 21px,transparent 21px 28px);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude; opacity:.42;
-}
 
 /* ── buttons ────────────────────────────────────────────── */
-.btn{font-family:'Baloo 2',system-ui,sans-serif;font-weight:700;border:none;border-radius:999px;cursor:pointer;
+.btn{font-family:'Fredoka',sans-serif;font-weight:600;border:none;border-radius:999px;cursor:pointer;
   transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms ease,background 180ms ease}
-.btn-p{background:var(--rose);color:#fff;padding:13px 30px;font-size:17px;border:3px solid var(--ink);
-  box-shadow:4px 4px 0 var(--ink);animation:nudge 3s ease-in-out infinite}
-.btn-p:hover{transform:translate(-1px,-2px);box-shadow:6px 6px 0 var(--ink)}
-.btn-p:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
-.btn-p:disabled{background:#E6DCCB;color:#9D9082;box-shadow:4px 4px 0 rgba(42,37,33,.22);cursor:default;animation:none;transform:none}
-.btn-s{background:var(--paper-hi);color:var(--ink);border:2.5px solid var(--ink);padding:10px 20px;font-size:14px;font-weight:700;box-shadow:3px 3px 0 rgba(42,37,33,.16)}
+.btn-p{background:var(--rose-deep);color:#fff;padding:14px 32px;font-size:17px;
+  box-shadow:0 4px 0 #9E1D4E;animation:nudge 2.6s ease-in-out infinite}
+.btn-p:hover{background:#C22461;transform:translateY(-2px);box-shadow:0 6px 0 #9E1D4E}
+.btn-p:active{transform:translateY(2px);box-shadow:0 2px 0 #9E1D4E}
+.btn-p:disabled{background:#E7D9E2;color:#A896A6;box-shadow:0 4px 0 #D6C6D2;cursor:default;animation:none;transform:none}
+.btn-s{background:var(--paper-hi);color:var(--ink70);border:2px solid var(--edge-soft);padding:10px 20px;font-size:14px;font-weight:500}
 .btn-s:hover{border-color:var(--rose);color:var(--rose-deep);transform:translateY(-1px)}
 .btn-t{background:none;border:none;color:var(--rose-deep);font-weight:700;cursor:pointer;font-size:14.5px;padding:11px 14px;min-height:44px;border-radius:10px}
 .btn-t:hover:not(:disabled){background:var(--rose-soft)}
@@ -143,15 +128,14 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
 /* ── stamp + letter cards ───────────────────────────────── */
 .beadword{display:inline-flex;align-items:center;gap:5px;position:relative;padding:0 14px;vertical-align:middle}
 .beadword::before{content:'';position:absolute;left:0;right:0;top:50%;height:3px;background:var(--ink);opacity:.35;border-radius:2px;z-index:0}
-.lbead{position:relative;z-index:1;width:30px;height:30px;border-radius:8px;border:2.8px solid var(--ink);display:grid;place-items:center;
-  font-family:'Baloo 2',sans-serif;font-weight:800;font-size:15px;color:var(--ink);background:#fff;
+.lbead{position:relative;z-index:1;width:30px;height:30px;border-radius:9px;border:2.5px solid var(--ink);display:grid;place-items:center;
+  font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:var(--ink);background:#fff;
   animation:popIn 400ms cubic-bezier(.34,1.56,.64,1) both}
 .lcard{position:relative;cursor:pointer;padding:20px 18px 18px;min-height:158px;display:flex;flex-direction:column;
   justify-content:space-between;animation:popIn 360ms cubic-bezier(.34,1.56,.64,1) both;
   transition:transform 260ms cubic-bezier(.34,1.56,.64,1),box-shadow 260ms ease}
-.lcard:hover{transform:translateY(-5px) rotate(-1.2deg);box-shadow:var(--sh-lift)}
-.lcard .stamp{position:absolute;top:12px;right:12px}
-.lcard .label{font-family:'Caveat',cursive;font-weight:600;font-size:22px;line-height:1.16;padding-right:66px;color:var(--ink)}
+.lcard:hover{transform:translateY(-5px) rotate(-.8deg);box-shadow:0 9px 0 rgba(46,34,51,.13)}
+.lcard .label{font-family:'Fredoka',sans-serif;font-weight:500;font-size:18px;line-height:1.28;color:var(--ink)}
 .lcard .mini{margin-top:12px;opacity:.85}
 .lcard.done{opacity:.72}
 .lcard.done .label{color:var(--ink70)}
@@ -160,8 +144,8 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
 
 /* ── bottom nav ─────────────────────────────────────────── */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:center;padding:0 12px 12px;pointer-events:none}
-.navin{pointer-events:auto;display:flex;align-items:center;gap:4px;background:rgba(255,253,246,.94);
-  backdrop-filter:blur(10px);border:3px solid var(--ink);border-radius:999px;padding:6px;box-shadow:var(--sh-card)}
+.navin{pointer-events:auto;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.95);
+  backdrop-filter:blur(10px);border:2.5px solid var(--ink);border-radius:999px;padding:6px;box-shadow:var(--sh-card)}
 .navb{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;
   padding:7px 15px;border-radius:999px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--ink45);transition:all 180ms}
 .navb.on{background:var(--rose-soft);color:var(--rose-deep)}
@@ -201,8 +185,7 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
   .screen{padding:64px 14px 26px}
   .grid{grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:13px}
   .lcard{min-height:132px;padding:15px 13px 13px}
-  .lcard .label{font-size:19px;line-height:1.14;padding-right:44px}
-  .lcard .stamp{transform:scale(.8);transform-origin:top right}
+  .lcard .label{font-size:16.5px;line-height:1.24}
   .lbead{width:25px;height:25px;font-size:12.5px;border-radius:7px}
   .beadword{gap:3.5px;padding:0 10px}
   .music{top:8px;right:8px;left:8px;justify-content:flex-start;padding:5px 10px 5px 6px}
@@ -257,13 +240,13 @@ async function loadJar(id) {
 
 /* ── palette ─────────────────────────────────────────────────── */
 const HUE = {
-  rose:   { ink:'#F2769C', deep:'#C43C6B', tint:'#FDE0E9' },
-  blue:   { ink:'#3B9BDC', deep:'#1B6C9E', tint:'#D9ECFA' },
-  sage:   { ink:'#56A84F', deep:'#317030', tint:'#DEF1DB' },
-  butter: { ink:'#F5B921', deep:'#96700A', tint:'#FDEFCC' },
-  lilac:  { ink:'#7454C8', deep:'#4B2FA0', tint:'#E7E0FA' },
-  clay:   { ink:'#F0862A', deep:'#AD560C', tint:'#FCE4CD' },
-  red:    { ink:'#E5443B', deep:'#AE2820', tint:'#FBDCD9' }
+  rose:   { ink:'#FF5F9E', deep:'#C42264', tint:'#FFE1EC' },
+  blue:   { ink:'#3FA9E0', deep:'#1B6288', tint:'#DFF0FA' },
+  sage:   { ink:'#2FB8A0', deep:'#15705F', tint:'#DCF3EE' },
+  butter: { ink:'#F5A524', deep:'#8F5A05', tint:'#FDEDD3' },
+  lilac:  { ink:'#7C5CE0', deep:'#5333B8', tint:'#EAE3FC' },
+  clay:   { ink:'#FF6B5A', deep:'#C4392A', tint:'#FFE3DF' },
+  red:    { ink:'#E4534A', deep:'#AE2820', tint:'#FBDCD9' }
 };
 const WHEEL = ['rose','blue','butter','sage','clay','lilac','red'];
 
@@ -757,15 +740,15 @@ function startFresh() { if (state.screen !== 'names') go('names'); }
 
 /* ══ screens ══ */
 function renderLoading() {
-  app().innerHTML = `<div style="min-height:70vh;display:grid;place-items:center"><div class="bobber">${stampSVG(74, 'rose', 'envelope', 20)}</div></div>`;
+  app().innerHTML = `<div style="min-height:70vh;display:grid;place-items:center"><div class="bobber">${bowSVG(70, 'rose')}</div></div>`;
 }
 
 function renderLanding() {
   const d = readDraft();
   app().innerHTML =
   `<div class="screen" style="max-width:560px">
-    <div class="sheet airmail" style="padding:30px 26px 28px;text-align:center">
-      <div style="position:absolute;top:14px;right:14px">${stampSVG(58, 'rose', 'heart', 20, { marked: true })}</div>
+    <div class="sheet" style="padding:30px 26px 28px;text-align:center">
+      <div style="position:absolute;top:14px;right:14px">${bowSVG(54, 'rose')}</div>
       <div class="center" style="margin:6px 0 2px"><span class="bobber">${jarSVG(164, 9, true)}</span></div>
       <div class="center" style="margin:2px 0 8px">${beadWord('FRIENDS')}</div>
       <h1 style="font-size:clamp(38px,9.5vw,52px);margin:2px 0 2px">Jar of Friendship</h1>
@@ -788,7 +771,7 @@ function renderNames() {
     <h2 style="font-size:38px;margin-bottom:4px">Who's it for?</h2>
     <p style="font-size:15.5px;color:var(--ink70);margin-bottom:20px">Two names, and we'll start writing.</p>
     <div class="sheet" style="padding:22px 20px 24px">
-      <div style="position:absolute;top:12px;right:12px;opacity:.9">${stampSVG(46, 'butter', 'sun', 15)}</div>
+      <div style="position:absolute;top:12px;right:12px;opacity:.9">${bowSVG(44, 'butter')}</div>
       <div style="margin-bottom:16px;padding-right:56px"><label class="fl" for="inp-sender">Your name</label>
         <input type="text" id="inp-sender" placeholder="You" value="${esc(state.sender)}" maxlength="${MAX_NAME}" autocomplete="given-name" enterkeyhint="next"></div>
       <div class="center" style="margin:2px 0 10px">${bandSVG(210, ['butter','blue'], '+')}</div>
@@ -814,9 +797,9 @@ function renderSelect() {
     return `<div class="sheet lcard ${sel ? '' : ''}" onclick="toggleP('${p.id}')" role="checkbox" tabindex="0"
       aria-checked="${sel}" onkeydown="kbd(event,function(){toggleP('${p.id}')})"
       style="animation-delay:${i * 28}ms;${sel ? 'border-color:' + HUE[p.c].ink + ';box-shadow:0 0 0 2px ' + HUE[p.c].tint + ', var(--sh-card)' : ''}">
-      ${stampSVG(56, p.c, p.m, p.d, { marked: sel })}
-      <div class="label">${esc(p.label)}</div>
-      <div class="mini" style="font-size:12px;font-weight:700;color:${sel ? HUE[p.c].deep : 'var(--ink45)'};letter-spacing:.06em;text-transform:uppercase">
+      <div class="center" style="margin-bottom:10px">${bowSVG(54, p.c)}</div>
+      <div class="label" style="padding-right:0;text-align:center">${esc(p.label)}</div>
+      <div class="mini" style="font-size:12px;font-weight:700;text-align:center;color:${sel ? HUE[p.c].deep : 'var(--ink45)'};letter-spacing:.06em;text-transform:uppercase">
         ${sel ? '✓ in the jar' : 'tap to add'}</div>
     </div>`;
   }).join('');
@@ -854,7 +837,7 @@ function renderWrite() {
     return `<button onclick="jumpTo(${i})" title="${esc(q.label)}" aria-label="${esc(q.label)}"
       style="border:none;background:none;cursor:pointer;padding:7px 6px;min-height:44px;min-width:40px;line-height:0;opacity:${cur ? 1 : done ? .82 : .42};
       transform:scale(${cur ? 1.18 : 1}) rotate(${(i % 3 - 1) * 3}deg);transition:all 220ms cubic-bezier(.34,1.56,.64,1)">
-      ${stampSVG(cur ? 30 : 25, q.c, q.m, q.d, { marked: !!done })}</button>`;
+      ${bowSVG(cur ? 32 : 26, q.c)}</button>`;
   }).join('');
   app().innerHTML =
   `<div class="screen" style="max-width:580px">
@@ -864,7 +847,7 @@ function renderWrite() {
       Letter ${state.curIdx + 1} of ${state.selP.length}</div>
     <h3 class="hand" style="font-size:30px;text-align:center;margin-bottom:16px;color:${HUE[pr.c].deep}">${esc(pr.label)}</h3>
     <div class="sheet ruled" style="padding:22px 16px 16px;position:relative">
-      <div style="position:absolute;top:12px;right:12px;opacity:.95">${stampSVG(50, pr.c, pr.m, pr.d)}</div>
+      <div style="position:absolute;top:10px;right:12px;opacity:.95">${bowSVG(46, pr.c)}</div>
       <div style="position:absolute;left:0;top:18px;bottom:18px;width:5px;border-radius:0 4px 4px 0;background:${HUE[pr.c].ink};opacity:.75"></div>
       <textarea id="ta" maxlength="${MAX_NOTE}" placeholder="Say it the way only you would…" style="padding-right:64px">${esc(val)}</textarea>
       <div class="count" id="ta-count"></div>
@@ -1006,11 +989,11 @@ async function persistJar() {
   await wait(760); state.sealP = 'done'; renderSeal();
 }
 
-const SEAL_TITLE = { collecting: 'Folding your letters…', tying: 'Tying the band…', stamping: 'Stamping the postmark…', done: 'Your jar is ready' };
+const SEAL_TITLE = { collecting: 'Folding your letters…', tying: 'Tying the band…', stamping: 'Finishing the knot…', done: 'Your jar is ready' };
 function sealSub(st) {
   if (st === 'collecting') return state.colCt + ' of ' + state.selP.length + ' letters tucked in';
   if (st === 'tying') return 'One band, two friends.';
-  if (st === 'stamping') return 'Almost in the post…';
+  if (st === 'stamping') return 'Almost there…';
   return state.selP.length + ' letters for ' + state.recip;
 }
 function paintSealText() {
@@ -1048,8 +1031,8 @@ function renderSeal() {
       <h2 style="font-size:40px;margin-bottom:2px">Your jar is ready</h2>
       <p class="script" style="font-size:22px;color:var(--ink70);margin-bottom:14px">${state.selP.length} letters for ${esc(state.recip)}</p>
       <div class="center">${jarSVG(184, state.selP.length, true)}</div>
-      <div class="sheet airmail" style="padding:20px;margin:14px 0 14px">
-        <div style="position:absolute;top:10px;right:10px">${stampSVG(48, 'rose', 'heart', 20, { marked: true, animate: true, delay: 400 })}</div>
+      <div class="sheet" style="padding:20px;margin:14px 0 14px">
+        <div style="position:absolute;top:10px;right:10px">${bowSVG(46, 'rose')}</div>
         <div class="center" style="margin-bottom:8px">${beadWord(((state.recip.trim()[0] || 'F') + '+' + (state.sender.trim()[0] || 'F')).toUpperCase())}</div>
         <div class="hand" style="font-size:26px;padding-right:52px">From ${esc(state.sender)}, to ${esc(state.recip)}</div>
         <div style="font-size:14px;color:var(--rose-deep);font-weight:700;margin-top:2px">Happy Friendship Day</div>
@@ -1076,8 +1059,8 @@ function renderSeal() {
     <p id="seal-sub" class="script" style="font-size:21px;color:var(--ink70);margin-bottom:14px">${sealSub(state.sealP)}</p>
     <div style="position:relative;width:226px;margin:0 auto 18px">
       <div id="seal-jar"></div>
-      <div id="seal-stamp" style="position:absolute;top:20%;left:52%;transform:translate(-50%,-50%);opacity:0;transition:opacity 200ms ease">
-        ${stampSVG(72, 'rose', 'envelope', 20, { marked: true, animate: true })}</div>
+      <div id="seal-stamp" style="position:absolute;top:22%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity 200ms ease">
+        <span style="display:inline-block;animation:stampIn 640ms cubic-bezier(.34,1.56,.64,1) both">${bowSVG(66, 'rose')}</span></div>
     </div>
     <div style="width:100%;max-width:270px;height:5px;border-radius:3px;background:var(--edge-soft);margin:0 auto;overflow:hidden">
       <div id="seal-bar" style="width:0%;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--rose),var(--butter),var(--sage));transition:width 320ms ease"></div>
@@ -1112,10 +1095,9 @@ function renderRecipient() {
   const cards = d.letters.map((l, i) => {
     const pr = P(l.promptId), op = state.opened.has(l.promptId);
     const hasM = l.media && l.media.src;
-    return `<div class="sheet lcard ${op ? 'done' : ''} ${i % 4 === 0 ? 'airmail' : ''}" onclick="openLetter(${i})" role="button" tabindex="0"
+    return `<div class="sheet lcard ${op ? 'done' : ''}" onclick="openLetter(${i})" role="button" tabindex="0"
       onkeydown="kbd(event,function(){openLetter(${i})})" style="animation-delay:${i * 40}ms">
-      ${stampSVG(46, pr.c, pr.m, pr.d, { marked: op })}
-      <div class="center" style="margin:2px 0 10px"><span style="opacity:${op ? .4 : 1}">${bowSVG(op ? 46 : 54, pr.c)}</span></div>
+      <div class="center" style="margin:2px 0 12px"><span style="opacity:${op ? .42 : 1}">${bowSVG(op ? 48 : 56, pr.c)}</span></div>
       <div class="label" style="padding-right:0;text-align:center">${esc(pr.label)}</div>
       <div class="row" style="gap:7px;margin-top:10px">
         ${hasM ? `<span style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:${HUE[pr.c].deep}">
@@ -1163,7 +1145,7 @@ function mountLetter(dir) {
   `<div class="ovcard" style="perspective:1600px">
     <div id="letter-card" class="sheet ruled" style="padding:22px 18px 18px;transform-origin:center top;
       animation:${dir === 'in' ? 'unfoldTop 660ms cubic-bezier(.2,.86,.32,1.02) both' : dir === 'next' ? 'pageTurnIn 430ms ease-out both' : 'pageTurnIn 430ms ease-out both'}">
-      <div style="position:absolute;top:12px;right:12px">${stampSVG(56, pr.c, pr.m, pr.d, { marked: true, animate: true, delay: dir === 'in' ? 620 : 220 })}</div>
+      <div style="position:absolute;top:12px;right:12px"><span style="display:inline-block;animation:stampIn 620ms cubic-bezier(.34,1.56,.64,1) both;animation-delay:${dir === 'in' ? 560 : 200}ms">${bowSVG(52, pr.c)}</span></div>
       <div style="position:absolute;left:0;top:18px;bottom:18px;width:5px;border-radius:0 4px 4px 0;background:${C.ink};opacity:.75"></div>
       <div id="letter-inner" style="opacity:0;animation:fadeUp 420ms ease ${dir === 'in' ? 420 : 160}ms forwards">
         <div class="hand" style="font-size:26px;color:${C.deep};padding-right:60px;margin-bottom:10px">${esc(pr.label)}</div>
@@ -1211,9 +1193,9 @@ function closeLetter() {
 
 
 /* ══ a shareable card for one letter ══ */
-async function stampPNG(pr, scale, marked) {
-  const w = 100 * (scale || 3), h = 118 * (scale || 3);
-  const img = await svgToImage(stampSVG(w, pr.c, pr.m, pr.d, { marked: marked !== false }));
+async function stampPNG(pr, scale) {
+  const w = 100 * (scale || 3), h = w;
+  const img = await svgToImage(bowSVG(w, pr.c));
   const c = document.createElement('canvas');
   c.width = w; c.height = h;
   const x = c.getContext('2d');
@@ -1286,8 +1268,8 @@ async function shareCard() {
 
   // the stamp
   try {
-    const img = await svgToImage(stampSVG(180, pr.c, pr.m, pr.d, { marked: true }));
-    x.drawImage(img, W - M - 214, top + 40, 180, 212);
+    const img = await svgToImage(bowSVG(180, pr.c));
+    x.drawImage(img, W - M - 208, top + 44, 176, 176);
   } catch (e) {}
 
   x.textBaseline = 'top';
@@ -1369,8 +1351,8 @@ async function exportPDF() {
     pdf.text(`${d.letters.length} letters · ${fmtDate(d.createdAt)}`, W / 2, H * 0.5 + 20, { align: 'center' });
     pdf.text('Happy Friendship Day', W / 2, H - M, { align: 'center' });
     try {
-      const cover = await stampPNG({ c:'rose', m:'heart', d:20 }, 3, true);
-      if (cover) pdf.addImage(cover, 'PNG', W - M - 60, M + 4, 60, 71);
+      const cover = await stampPNG({ c:'rose' }, 3);
+      if (cover) pdf.addImage(cover, 'PNG', W - M - 62, M + 2, 62, 62);
     } catch (e) {}
 
     for (let i = 0; i < d.letters.length; i++) {
@@ -1381,7 +1363,7 @@ async function exportPDF() {
       pdf.line(M - 12, M + 6, M - 12, M + 46);
       try {
         const png = await stampPNG(pr, 3);
-        if (png) pdf.addImage(png, 'PNG', W - M - 52, M - 4, 52, 61);
+        if (png) pdf.addImage(png, 'PNG', W - M - 54, M - 6, 54, 54);
       } catch (e) { /* the words matter more than the stamp */ }
       pdf.setTextColor(C[0], C[1], C[2]); pdf.setFont('times', 'bolditalic'); pdf.setFontSize(15);
       pdf.text(pdf.splitTextToSize(pr.label, W - M * 2 - 76), M, M + 20);
