@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /$
+Allow: /og.png
+# Jar links are private — keep them out of search results
+Disallow: /*#jar=
+Sitemap: https://jar-of-friendship.pages.dev/sitemap.txt

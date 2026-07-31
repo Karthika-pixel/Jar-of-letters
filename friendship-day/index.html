@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jar of Friendship</title>
+<meta name="description" content="String together little notes for your best friend and send them a jar to open all year.">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="canonical" href="https://jar-of-friendship.pages.dev/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jar of Friendship">
+<meta property="og:title" content="Jar of Friendship — a jar of notes for your best friend">
+<meta property="og:description" content="Write a little note for every mood, tie up the jar, and send your friend a link they can open all year.">
+<meta property="og:url" content="https://jar-of-friendship.pages.dev/">
+<meta property="og:image" content="https://jar-of-friendship.pages.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Jar of Friendship">
+<meta name="twitter:description" content="A jar of little notes for your best friend — one for every mood.">
+<meta name="twitter:image" content="https://jar-of-friendship.pages.dev/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23FFF7EC'/%3E%3Cpath d='M50,52 C34,26 6,31 10,52 C13,69 38,66 50,52 Z' fill='%23FF5F9E' stroke='%232E2233' stroke-width='6'/%3E%3Cpath d='M50,52 C66,26 94,31 90,52 C87,69 62,66 50,52 Z' fill='%23FF5F9E' stroke='%232E2233' stroke-width='6'/%3E%3Cpath d='M44,58 C38,74 32,82 25,90 M56,58 C62,74 68,82 75,90' stroke='%232E2233' stroke-width='11' fill='none' stroke-linecap='round'/%3E%3Cpath d='M44,58 C38,74 32,82 25,90 M56,58 C62,74 68,82 75,90' stroke='%23FF5F9E' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='52' r='11' fill='%23FFF7EC' stroke='%232E2233' stroke-width='6'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<style>
+:root{
+  --pink:#FF5F9E; --pink-deep:#D92C6E; --pink-soft:#FFE1EC;
+  --coral:#FF6B5A; --marigold:#F5A524; --mint:#2FB8A0; --sky:#3FA9E0; --violet:#7C5CE0;
+  --cream:#FFF7EC; --paper:#FFFFFF; --sand:#FDEFDD;
+  --ink:#2E2233; --ink70:#5E4C60; --ink45:#9C8A9C; --line:#EADCC9;
+  --sh:0 4px 0 rgba(46,34,51,.10); --sh-lg:0 10px 28px rgba(46,34,51,.12);
+  --r-lg:26px; --r-md:20px; --r-sm:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--cream);
+  background-image:
+    radial-gradient(900px 520px at 8% -6%,rgba(255,95,158,.16),transparent 60%),
+    radial-gradient(760px 480px at 96% 2%,rgba(124,92,224,.11),transparent 60%),
+    radial-gradient(820px 560px at 50% 106%,rgba(47,184,160,.12),transparent 62%);
+  background-attachment:fixed;
+  font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.fred{font-family:'Fredoka',system-ui,sans-serif;font-weight:600;letter-spacing:-.01em;line-height:1.12}
+
+/* ── motion ─────────────────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{0%{opacity:0;transform:scale(.8) rotate(-6deg)}62%{opacity:1;transform:scale(1.06) rotate(2deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}22%{transform:rotate(-3deg)}66%{transform:rotate(3deg)}}
+@keyframes drift{0%{transform:translateY(0) rotate(0);opacity:0}12%{opacity:.85}88%{opacity:.85}100%{transform:translateY(-112vh) rotate(280deg);opacity:0}}
+@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes conf{0%{transform:translateY(0) scale(0) rotate(0);opacity:0}18%{opacity:1;transform:translateY(-34px) scale(1.2) rotate(50deg)}100%{transform:translateY(90px) scale(.5) rotate(220deg);opacity:0}}
+@keyframes burst{0%{transform:translate(-50%,-50%) scale(0);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.1);opacity:0}}
+@keyframes knotPop{0%{transform:scale(1) rotate(0)}38%{transform:scale(1.28) rotate(12deg)}100%{transform:scale(0) rotate(-40deg);opacity:0}}
+@keyframes stampIn{0%{transform:scale(2.6) rotate(-18deg);opacity:0}52%{transform:scale(1.12) rotate(5deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes shine{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ── layout ─────────────────────────────────────────── */
+.bg-beads{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bd{position:absolute;bottom:-40px;border-radius:50%;animation:drift linear infinite;will-change:transform}
+.screen{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:34px 20px 48px;animation:fadeUp 460ms ease}
+.footer{position:relative;z-index:1;text-align:center;padding:8px 20px 40px;font-size:13px;color:var(--ink45)}
+.footer b{color:var(--pink-deep);font-weight:500}
+
+/* ── surfaces ───────────────────────────────────────── */
+.card{background:var(--paper);border:2.5px solid var(--ink);border-radius:var(--r-lg);box-shadow:var(--sh)}
+.panel{background:var(--paper);border:2px solid var(--line);border-radius:var(--r-md)}
+
+/* ── buttons ────────────────────────────────────────── */
+.btn{font-family:'Fredoka',sans-serif;font-weight:600;border:none;border-radius:999px;cursor:pointer;transition:transform 200ms cubic-bezier(.34,1.56,.64,1),box-shadow 200ms ease,background 200ms ease}
+.btn-p{background:var(--pink-deep);color:#fff;padding:15px 34px;font-size:17px;box-shadow:0 4px 0 #9E1D4E;animation:nudge 2.6s ease-in-out infinite}
+.btn-p:hover{background:#C22461;transform:translateY(-2px);box-shadow:0 6px 0 #9E1D4E}
+.btn-p:active{transform:translateY(2px);box-shadow:0 2px 0 #9E1D4E}
+.btn-p:disabled{background:#E7D9E2;color:#A896A6;box-shadow:0 4px 0 #D6C6D2;cursor:default;animation:none;transform:none}
+.btn-s{background:var(--paper);color:var(--ink70);border:2px solid var(--line);padding:10px 20px;font-size:14px;font-weight:500}
+.btn-s:hover{border-color:var(--pink);color:var(--pink-deep);transform:translateY(-1px)}
+
+/* ── beads ──────────────────────────────────────────── */
+.beadword{display:inline-flex;align-items:center;gap:5px;position:relative;padding:0 14px}
+.beadword::before{content:'';position:absolute;left:0;right:0;top:50%;height:3px;background:var(--line);border-radius:2px;z-index:0}
+.lbead{position:relative;z-index:1;width:30px;height:30px;border-radius:9px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:var(--ink);background:#fff;animation:popIn 420ms cubic-bezier(.34,1.56,.64,1) both}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:999px;border:2px solid var(--ink);background:linear-gradient(100deg,#FFE1EC,#E7F7F3,#EFE7FF,#FFE1EC);background-size:220% 100%;animation:shine 7s ease-in-out infinite;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);box-shadow:var(--sh)}
+
+/* ── mood chips ─────────────────────────────────────── */
+.chip{position:relative;background:var(--paper);border:2.5px solid var(--ink);border-radius:var(--r-md);padding:22px 16px 20px;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--sh);transition:transform 220ms cubic-bezier(.34,1.56,.64,1),box-shadow 220ms ease,background 220ms ease;animation:popIn 340ms cubic-bezier(.34,1.56,.64,1) both}
+.chip:hover{transform:translateY(-4px) rotate(-1deg);box-shadow:0 8px 0 rgba(46,34,51,.12)}
+.chip .lab{font-size:15px;font-weight:500;line-height:1.35;color:var(--ink)}
+.chip.sel{background:var(--c-soft);box-shadow:0 4px 0 var(--c)}
+.chip .tick{position:absolute;top:-11px;right:-11px;width:28px;height:28px;border-radius:50%;background:var(--c);border:2.5px solid var(--ink);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:700;animation:popIn 300ms cubic-bezier(.34,1.56,.64,1)}
+
+/* ── gift cards ─────────────────────────────────────── */
+.gift{position:relative;background:var(--paper);border:2.5px solid var(--ink);border-radius:var(--r-md);padding:26px 18px 22px;cursor:pointer;text-align:center;box-shadow:var(--sh);transition:transform 240ms cubic-bezier(.34,1.56,.64,1),box-shadow 240ms ease;animation:popIn 380ms cubic-bezier(.34,1.56,.64,1) both}
+.gift:hover{transform:translateY(-5px) rotate(1deg);box-shadow:0 9px 0 rgba(46,34,51,.13)}
+.gift.op{background:var(--sand);box-shadow:none;opacity:.85}
+.pill{position:absolute;top:10px;right:12px;font-size:11px;font-weight:600;color:var(--ink45);background:#fff;border:2px solid var(--line);border-radius:999px;padding:2px 9px}
+
+/* ── inputs ─────────────────────────────────────────── */
+input[type="text"]{width:100%;padding:15px 18px;border:2.5px solid var(--ink);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);background:var(--paper);outline:none;transition:box-shadow 180ms ease,border-color 180ms}
+input[type="text"]:focus{border-color:var(--pink-deep);box-shadow:0 0 0 4px var(--pink-soft)}
+input[type="text"]::placeholder{color:var(--ink45)}
+.fieldlab{font-family:'Fredoka',sans-serif;font-weight:500;font-size:14px;color:var(--ink70);display:block;margin-bottom:7px}
+textarea{width:100%;min-height:230px;border:none;outline:none;resize:vertical;font-family:'Caveat',cursive;font-size:27px;line-height:40px;color:var(--ink);padding:0 8px 0 16px;background:repeating-linear-gradient(transparent,transparent 39px,rgba(46,34,51,.13) 39px,rgba(46,34,51,.13) 40px);background-attachment:local}
+textarea::placeholder{color:var(--ink45);font-family:'DM Sans',sans-serif;font-size:15px;line-height:40px}
+
+/* ── overlay ────────────────────────────────────────── */
+.overlay{position:fixed;inset:0;z-index:1000;background:rgba(46,34,51,.55);backdrop-filter:blur(9px);display:flex;align-items:center;justify-content:center;padding:18px;animation:fadeUp 320ms ease;overflow-y:auto}
+.note-body{font-family:'Caveat',cursive;font-size:26px;line-height:40px;white-space:pre-wrap;word-break:break-word;background:repeating-linear-gradient(transparent,transparent 39px,rgba(46,34,51,.13) 39px,rgba(46,34,51,.13) 40px)}
+.wiggler{display:inline-block}
+.center{display:flex;justify-content:center;align-items:center}
+.wiggler:hover{animation:wiggle 720ms ease-in-out}
+.bobber{animation:bob 4.2s ease-in-out infinite}
+.thread{width:100%;max-width:280px;height:5px;border-radius:3px;background:var(--line);margin:0 auto;overflow:hidden}
+.thread>i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--pink),var(--marigold),var(--mint));transition:width 340ms ease}
+.chip:focus-visible,.gift:focus-visible,.btn:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--pink-deep);outline-offset:3px}
+.count{font-size:12px;color:var(--ink45);text-align:right;padding:6px 4px 0}
+.count.warn{color:var(--pink-deep);font-weight:600}
+.notice{border:2.5px solid var(--ink);border-radius:var(--r-md);background:#FFE3DF;padding:16px 18px;text-align:left;font-size:15px;line-height:1.55;box-shadow:var(--sh)}
+.sharebtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .bd{display:none}
+}
+@media (max-width:520px){
+  .screen{padding:24px 16px 40px}
+  .lbead{width:26px;height:26px;font-size:13px;border-radius:8px}
+  .beadword{gap:4px;padding:0 10px}
+}
+</style>
+</head>
+<body>
+<div class="bg-beads" id="beads"></div>
+<div id="app"></div>
+<script>
+// ─── Firebase ────────────────────────────────────────────────────────────────
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBNRldLW2ctFyoIXnz020yxtvfd_HxONUA",
+  authDomain: "jar-of-letters.firebaseapp.com",
+  databaseURL: "https://jar-of-letters-default-rtdb.firebaseio.com",
+  projectId: "jar-of-letters",
+  storageBucket: "jar-of-letters.firebasestorage.app",
+  messagingSenderId: "239476265066",
+  appId: "1:239476265066:web:5f6141734c0835aa6d7a13",
+  measurementId: "G-6ET0HFFV5D"
+};
+// file:// is dev only — there we fall back to localStorage so the flow is testable.
+// On a real host a missing database is a hard error: we must never hand out a dead link.
+const DEV_LOCAL = location.protocol === 'file:';
+let db = null;
+try {
+  if(typeof firebase === 'undefined') throw new Error('Firebase SDK blocked or offline');
+  firebase.initializeApp(FIREBASE_CONFIG);
+  db = firebase.database();
+} catch(e){
+  console.warn('Firebase unavailable:', e.message);
+}
+
+function withTimeout(promise, ms, label){
+  return Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error(label || 'timeout')), ms))]);
+}
+
+async function saveJar(id, data){
+  if(db) return withTimeout(db.ref('jars/' + id).set(data), 12000, 'Saving took too long');
+  if(DEV_LOCAL) return localStorage.setItem('jar-' + id, JSON.stringify(data));
+  throw new Error('No connection to the database');
+}
+async function loadJar(id){
+  if(db){ const snap = await withTimeout(db.ref('jars/' + id).once('value'), 12000, 'Loading took too long'); return snap.val(); }
+  if(DEV_LOCAL){ const d = localStorage.getItem('jar-' + id); return d ? JSON.parse(d) : null; }
+  throw new Error('No connection to the database');
+}
+
+// ─── Local persistence: drafts + which notes have been opened ────────────────
+const DRAFT_KEY = 'jof-draft-v1';
+function saveDraft(){
+  try{
+    if(!state.sender && !state.recip && !state.selP.length) return;
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({
+      sender:state.sender, recip:state.recip, selP:state.selP, letters:state.letters, curIdx:state.curIdx, t:Date.now()
+    }));
+  }catch(e){}
+}
+function readDraft(){
+  try{
+    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+    if(!d || !d.t || Date.now() - d.t > 1000 * 60 * 60 * 24 * 14) return null;   // 14-day life
+    if(!d.selP || !d.selP.length) return null;
+    return d;
+  }catch(e){ return null; }
+}
+function clearDraft(){ try{ localStorage.removeItem(DRAFT_KEY); }catch(e){} }
+function openedKey(id){ return 'jof-opened-' + id; }
+function readOpened(id){
+  try{ return new Set(JSON.parse(localStorage.getItem(openedKey(id)) || '[]')); }catch(e){ return new Set(); }
+}
+function writeOpened(id, set){
+  try{ localStorage.setItem(openedKey(id), JSON.stringify(Array.from(set))); }catch(e){}
+}
+
+// ─── Design tokens ───────────────────────────────────────────────────────────
+const C = { pink:'#FF5F9E', coral:'#FF6B5A', marigold:'#F5A524', mint:'#2FB8A0', sky:'#3FA9E0', violet:'#7C5CE0' };
+const SOFT = { pink:'#FFE1EC', coral:'#FFE3DF', marigold:'#FDEDD3', mint:'#DCF3EE', sky:'#DFF0FA', violet:'#EAE3FC' };
+const DEEP = { pink:'#C42264', coral:'#C4392A', marigold:'#8F5A05', mint:'#15705F', sky:'#1B6288', violet:'#5333B8' };
+const WHEEL = ['pink','coral','marigold','mint','sky','violet'];
+
+const PROMPTS = [
+  {id:"rough",    c:"coral",    label:"Open when you're having a rough day"},
+  {id:"win",      c:"marigold", label:"Open when something amazing happens"},
+  {id:"miss",     c:"pink",     label:"Open when you miss me"},
+  {id:"far",      c:"sky",      label:"Open when we're far apart"},
+  {id:"true",     c:"violet",   label:"Open when you need to hear something true"},
+  {id:"lonely",   c:"mint",     label:"Open when you feel alone"},
+  {id:"angry",    c:"coral",    label:"Open when you're furious at someone"},
+  {id:"sleep",    c:"violet",   label:"Open when you can't sleep"},
+  {id:"brave",    c:"marigold", label:"Open when you need courage"},
+  {id:"laugh",    c:"pink",     label:"Open when you need to laugh"},
+  {id:"proud",    c:"mint",     label:"Open when you're proud of yourself"},
+  {id:"remember", c:"sky",      label:"Open when you want to remember how we met"}
+];
+const P = id => PROMPTS.find(p => p.id === id) || PROMPTS[0];
+const MAX_NAME = 30, MAX_NOTE = 1200, MAX_NOTES = 12;
+
+function genId(){const c="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";let r="";for(let i=0;i<8;i++)r+=c[Math.floor(Math.random()*c.length)];return r}
+
+let state = {
+  screen:'loading', sender:'', recip:'', selP:[], letters:{}, curIdx:0,
+  jarId:null, jarData:null, opened:new Set(), viewing:null, sealP:'collecting', colCt:0,
+  pendingId:null, saveError:null
+};
+
+// ─── Ambient beads ───────────────────────────────────────────────────────────
+function initBeads(){
+  const host = document.getElementById('beads');
+  const seed = [[6,0,26,10],[13,5.5,31,7],[21,2,24,13],[29,8,29,8],[37,11,34,11],[45,3.5,27,9],
+                [53,9,32,7],[61,1,25,12],[69,6.5,30,9],[77,12,28,8],[85,4,33,11],[93,7.5,26,10],
+                [17,10,35,6],[41,0,22,14],[73,3,24,12],[89,11,31,7]];
+  seed.forEach(function(cfg, i){
+    const l = cfg[0], d = cfg[1], du = cfg[2], sz = cfg[3];
+    const b = document.createElement('span');
+    b.className = 'bd';
+    b.style.cssText = 'left:' + l + '%;width:' + sz + 'px;height:' + sz + 'px;background:' + C[WHEEL[i % WHEEL.length]]
+      + ';opacity:.16;border:2px solid rgba(46,34,51,.18);animation-delay:' + d + 's;animation-duration:' + du + 's';
+    host.appendChild(b);
+  });
+}
+
+// ─── Illustration ────────────────────────────────────────────────────────────
+function bandSVG(w, cols, label){
+  cols = cols || ['pink','mint'];
+  const H = 44, m = H / 2, TAIL = 46;
+  const W = Math.max(160, Math.round(w));
+  const c1 = C[cols[0]], c2 = C[cols[1]];
+
+  // splayed thread tails at both ends
+  function tails(x, dir){
+    let o = '';
+    [-13, -1, 12].forEach(function(dy, i){
+      const col = [c1, C[WHEEL[(i + 2) % 6]], c2][i];
+      const ex = x + dir * TAIL, cx = x + dir * (TAIL * 0.55);
+      o += '<path d="M' + x + ',' + m + ' Q' + cx + ',' + (m + dy * 0.15) + ' ' + ex + ',' + (m + dy)
+         + '" stroke="#2E2233" stroke-width="5" fill="none" stroke-linecap="round"/>'
+         + '<path d="M' + x + ',' + m + ' Q' + cx + ',' + (m + dy * 0.15) + ' ' + ex + ',' + (m + dy)
+         + '" stroke="' + col + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+    });
+    return o;
+  }
+
+  // braided run between x0 and x1
+  function braid(x0, x1){
+    const span = x1 - x0; if(span < 24) return '';
+    const per = 40, n = Math.max(1, Math.round(span / per)), step = span / n;
+    let a = 'M' + x0 + ',' + m, b = 'M' + x0 + ',' + m, dots = '';
+    for(let i = 0; i < n; i++){
+      const q = step / 4, hf = step / 2;
+      a += ' q' + q + ',-9 ' + hf + ',0 q' + q + ',9 ' + hf + ',0';
+      b += ' q' + q + ',9 ' + hf + ',0 q' + q + ',-9 ' + hf + ',0';
+    }
+    for(let i = 0; i <= n; i++){
+      dots += '<circle cx="' + (x0 + i * step) + '" cy="' + m + '" r="4" fill="'
+            + C[WHEEL[i % 6]] + '" stroke="#2E2233" stroke-width="2"/>';
+    }
+    return '<path d="' + a + '" stroke="#2E2233" stroke-width="9" fill="none" stroke-linecap="round"/>'
+         + '<path d="' + b + '" stroke="#2E2233" stroke-width="9" fill="none" stroke-linecap="round"/>'
+         + '<path d="' + a + '" stroke="' + c1 + '" stroke-width="5" fill="none" stroke-linecap="round"/>'
+         + '<path d="' + b + '" stroke="' + c2 + '" stroke-width="5" fill="none" stroke-linecap="round"/>' + dots;
+  }
+
+  let inner = '';
+  if(label){
+    const pw = Math.max(40, Math.min(W - TAIL * 2 - 96, label.length * 9.4 + 34));
+    const px = (W - pw) / 2;
+    inner = braid(TAIL, px) + braid(px + pw, W - TAIL)
+      + '<rect x="' + px + '" y="' + (m - 13) + '" width="' + pw + '" height="26" rx="9" fill="' + SOFT[cols[0]]
+      + '" stroke="#2E2233" stroke-width="3"/>'
+      + '<text x="' + (px + pw / 2) + '" y="' + (m + 5) + '" text-anchor="middle" '
+      + 'font-family="Fredoka, sans-serif" font-size="13" font-weight="600" letter-spacing="1.4" fill="#2E2233">'
+      + label + '</text>';
+  } else {
+    inner = braid(TAIL, W - TAIL);
+  }
+
+  return '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" fill="none" aria-hidden="true">'
+    + tails(TAIL, -1) + tails(W - TAIL, 1) + inner + '</svg>';
+}
+
+function beadWord(word){
+  return '<span class="beadword">' + word.split('').map(function(ch, i){
+    return '<span class="lbead" style="background:' + SOFT[WHEEL[i % WHEEL.length]]
+      + ';animation-delay:' + (i * 55) + 'ms;transform:rotate(' + (i % 2 ? 2.5 : -2.5) + 'deg)">' + ch + '</span>';
+  }).join('') + '</span>';
+}
+
+let knotSeq = 0;
+// a tied friendship-band bow — the "seal" of this design
+function knotSVG(size, key, extra){
+  const col = C[key || 'pink'], u = 'k' + (++knotSeq);
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 100 100" ' + (extra || '') + ' aria-hidden="true">'
+    + '<defs><linearGradient id="' + u + '" x1="0" y1="0" x2="0" y2="1">'
+    + '<stop offset="0%" stop-color="#fff" stop-opacity=".38"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>'
+    + '</linearGradient></defs>'
+    // tails
+    + '<path d="M44,58 C38,74 32,82 23,92 M56,58 C62,74 68,82 77,92" stroke="#2E2233" stroke-width="11" fill="none" stroke-linecap="round"/>'
+    + '<path d="M44,58 C38,74 32,82 23,92 M56,58 C62,74 68,82 77,92" stroke="' + col + '" stroke-width="6" fill="none" stroke-linecap="round"/>'
+    // loops
+    + '<path d="M50,52 C34,26 6,31 10,52 C13,69 38,66 50,52 Z" fill="' + col + '" stroke="#2E2233" stroke-width="5" stroke-linejoin="round"/>'
+    + '<path d="M50,52 C66,26 94,31 90,52 C87,69 62,66 50,52 Z" fill="' + col + '" stroke="#2E2233" stroke-width="5" stroke-linejoin="round"/>'
+    + '<path d="M50,52 C34,26 6,31 10,52 C13,69 38,66 50,52 Z" fill="url(#' + u + ')"/>'
+    + '<path d="M50,52 C66,26 94,31 90,52 C87,69 62,66 50,52 Z" fill="url(#' + u + ')"/>'
+    // centre knot
+    + '<circle cx="50" cy="52" r="11" fill="#FFF7EC" stroke="#2E2233" stroke-width="5"/>'
+    + '<circle cx="50" cy="52" r="3.4" fill="' + col + '"/></svg>';
+}
+
+function jarSVG(size, count, tied){
+  const u = 'j' + (++knotSeq);
+  const slots = [[104,252,-14],[152,242,11],[126,222,-6],[160,208,17],[110,196,-11],[150,183,8],
+                 [122,170,-16],[156,157,12],[130,146,-4],[142,134,7],[114,126,-12],[156,118,14]];
+  const shown = Math.max(3, Math.min(count || 3, 12));
+  let notes = '';
+  for(let i = 0; i < shown; i++){
+    const x = slots[i][0], y = slots[i][1], r = slots[i][2], k = WHEEL[i % 6];
+    notes += '<g transform="translate(' + x + ',' + y + ') rotate(' + r + ')">'
+      + '<rect x="-21" y="-14" width="42" height="28" rx="6" fill="' + SOFT[k] + '" stroke="#2E2233" stroke-width="2.4"/>'
+      + '<path d="M-13,-5 H13 M-13,2 H7" stroke="' + C[k] + '" stroke-width="2.6" stroke-linecap="round"/></g>';
+  }
+  const band = tied
+    ? '<g><path d="M56,112 q28,-13 56,0 q28,13 56,0 q28,-13 56,0" stroke="#2E2233" stroke-width="12" fill="none" stroke-linecap="round"/>'
+      + '<path d="M56,112 q28,-13 56,0 q28,13 56,0 q28,-13 56,0" stroke="#FF5F9E" stroke-width="7" fill="none" stroke-linecap="round"/>'
+      + '<path d="M56,118 q28,13 56,0 q28,-13 56,0 q28,13 56,0" stroke="#2E2233" stroke-width="11" fill="none" stroke-linecap="round"/>'
+      + '<path d="M56,118 q28,13 56,0 q28,-13 56,0 q28,13 56,0" stroke="#2FB8A0" stroke-width="6" fill="none" stroke-linecap="round"/>'
+      + '<path d="M214,112 l28,-18 M214,120 l26,22" stroke="#2E2233" stroke-width="7" stroke-linecap="round"/>'
+      + '<path d="M214,112 l28,-18 M214,120 l26,22" stroke="#F5A524" stroke-width="3.6" stroke-linecap="round"/>'
+      + '<circle cx="212" cy="116" r="11" fill="#FF5F9E" stroke="#2E2233" stroke-width="4"/>'
+      + '<circle cx="212" cy="116" r="3.4" fill="#FFF7EC"/></g>'
+    : '';
+  return '<svg width="' + size + '" height="' + Math.round(size * 340 / 280) + '" viewBox="0 0 280 340" aria-hidden="true">'
+    + '<defs><clipPath id="' + u + 'c"><path d="M68,108 L58,276 C58,300 90,318 140,318 C190,318 222,300 222,276 L212,108 Z"/></clipPath>'
+    + '<linearGradient id="' + u + 'b" x1="0" y1="0" x2="1" y2="1">'
+    + '<stop offset="0%" stop-color="#FFFFFF"/><stop offset="55%" stop-color="#FDF6FA"/><stop offset="100%" stop-color="#F4EAF6"/></linearGradient></defs>'
+    + '<ellipse cx="140" cy="324" rx="86" ry="13" fill="#2E2233" opacity=".08"/>'
+    + '<path d="M68,108 L58,276 C58,300 90,318 140,318 C190,318 222,300 222,276 L212,108 Z" fill="url(#' + u + 'b)" stroke="#2E2233" stroke-width="5"/>'
+    + '<g clip-path="url(#' + u + 'c)">' + notes + '</g>'
+    + '<path d="M84,126 L77,264" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".7"/>'
+    + '<rect x="60" y="92" width="160" height="20" rx="9" fill="#FFE1EC" stroke="#2E2233" stroke-width="5"/>'
+    + '<g class="' + (tied ? '' : 'bobber') + '">'
+    + '<path d="M84,92 L90,66 C90,54 112,44 140,44 C168,44 190,54 190,66 L196,92" fill="#FFE1EC" stroke="#2E2233" stroke-width="5" stroke-linejoin="round"/>'
+    + '<ellipse cx="140" cy="48" rx="15" ry="8" fill="#FF5F9E" stroke="#2E2233" stroke-width="4"/></g>'
+    + band + '</svg>';
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const app = () => $('app');
+const esc = s => { const d = document.createElement('div'); d.textContent = (s == null ? '' : s); return d.innerHTML; };
+const wait = ms => new Promise(r => setTimeout(r, ms));
+function kbd(e, fn){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fn(); } }
+const foot = () => '<div class="footer">' + bandSVG(360, ['pink','marigold'], 'FRIENDS FOREVER')
+  + '<div style="margin-top:8px">Made with care by <b>Karthika</b> &nbsp;·&nbsp; Friendship Day 2026</div></div>';
+
+function render(){
+  const map = { loading:renderLoading, landing:renderLanding, names:renderNames, select:renderSelect,
+                write:renderWrite, seal:renderSeal, recipient:renderRecipient };
+  (map[state.screen] || renderLanding)();
+}
+
+function renderLoading(){
+  app().innerHTML = '<div style="min-height:100vh;display:grid;place-items:center"><div class="bobber">' + knotSVG(62,'pink') + '</div></div>';
+}
+
+function renderLanding(){
+  app().innerHTML =
+  '<div class="screen" style="max-width:560px">'
+  + '<div class="card" style="padding:30px 28px 32px;text-align:center">'
+  +   '<span class="badge">Friendship Day · 2 Aug 2026</span>'
+  +   '<div class="center" style="margin:14px 0 2px"><span class="wiggler">' + jarSVG(172, 9, true) + '</span></div>'
+  +   '<h1 style="font-size:clamp(34px,8vw,46px);margin:6px 0 14px">Jar of Friendship</h1>'
+  +   '<p style="font-size:17px;line-height:1.65;color:var(--ink70);max-width:400px;margin:0 auto">'
+  +     'String together little notes for your best friend &mdash; one for every mood &mdash; and send them a jar they can open all year.</p>'
+  +   '<div style="display:flex;justify-content:center;margin:20px 0 22px">' + beadWord('FRIENDS') + '</div>'
+  +   '<button class="btn btn-p" onclick="go(\'names\')">Make a jar &nbsp;→</button>'
+  +   (readDraft() ? '<div style="margin-top:14px"><button class="btn btn-s" onclick="resumeDraft()">Continue the jar you started →</button></div>' : '')
+  +   '<p style="margin-top:16px;font-size:14px;color:var(--ink45)">Free · no sign-up · just send them the link</p>'
+  + '</div></div>' + foot();
+}
+
+function renderNames(){
+  app().innerHTML =
+  '<div class="screen" style="max-width:460px">'
+  + '<button class="btn btn-s" onclick="go(\'landing\')" style="margin-bottom:22px">← Back</button>'
+  + '<h2 style="font-size:34px;margin-bottom:8px">Who\'s it for?</h2>'
+  + '<p style="font-size:16px;color:var(--ink70);margin-bottom:26px">Two names, and we\'ll start stringing.</p>'
+  + '<div class="card" style="padding:24px 22px 26px;border-color:var(--line);border-width:2px;box-shadow:var(--sh-lg)">'
+  +   '<div style="margin-bottom:16px"><label class="fieldlab" for="inp-sender">Your name</label>'
+  +   '<input type="text" id="inp-sender" placeholder="You" value="' + esc(state.sender) + '" autocomplete="given-name" maxlength="' + MAX_NAME + '" enterkeyhint="next"></div>'
+  +   '<div style="display:flex;justify-content:center;margin:2px 0 14px">' + bandSVG(230, ['marigold','sky'], '+') + '</div>'
+  +   '<div style="margin-bottom:24px"><label class="fieldlab" for="inp-recip">Your friend\'s name</label>'
+  +   '<input type="text" id="inp-recip" placeholder="Their name" value="' + esc(state.recip) + '" autocomplete="off" maxlength="' + MAX_NAME + '" enterkeyhint="go"></div>'
+  +   '<button class="btn btn-p" id="btn-next" onclick="submitNames()" style="width:100%">Pick the moments →</button>'
+  + '</div></div>' + foot();
+  const a = $('inp-sender'), b = $('inp-recip');
+  a.addEventListener('input', e => { state.sender = e.target.value; checkNames(); saveDraft(); });
+  b.addEventListener('input', e => { state.recip = e.target.value; checkNames(); saveDraft(); });
+  a.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); b.focus(); } });
+  b.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); submitNames(); } });
+  checkNames();
+  if(!state.sender) setTimeout(() => a.focus(), 60);
+}
+function checkNames(){ $('btn-next').disabled = !state.sender.trim() || !state.recip.trim(); }
+function submitNames(){ if(state.sender.trim() && state.recip.trim()) go('select'); }
+
+function renderSelect(){
+  const cards = PROMPTS.map(function(p, i){
+    const sel = state.selP.indexOf(p.id) > -1;
+    return '<div class="chip ' + (sel ? 'sel' : '') + '" onclick="toggleP(\'' + p.id + '\')" '
+      + 'role="checkbox" tabindex="0" aria-checked="' + sel + '" onkeydown="kbd(event,function(){toggleP(\'' + p.id + '\')})" '
+      + 'style="--c:' + C[p.c] + ';--c-soft:' + SOFT[p.c] + ';animation-delay:' + (i * 35) + 'ms">'
+      + (sel ? '<span class="tick">✓</span>' : '')
+      + knotSVG(54, p.c)
+      + '<span class="lab">' + esc(p.label) + '</span></div>';
+  }).join('');
+  const n = state.selP.length;
+  app().innerHTML =
+  '<div class="screen">'
+  + '<button class="btn btn-s" onclick="go(\'names\')" style="margin-bottom:22px">← Back</button>'
+  + '<h2 style="font-size:34px;margin-bottom:8px">Choose your moments</h2>'
+  + '<p style="font-size:16px;color:var(--ink70);margin-bottom:26px">Every note waits for its day. Pick at least 3 &mdash; more is better.</p>'
+  + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-bottom:30px">' + cards + '</div>'
+  + '<div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">'
+  +   '<span class="fred" style="font-size:15px;font-weight:500;color:' + (n >= 3 ? 'var(--pink-deep)' : 'var(--ink45)') + '">'
+  +     n + ' bead' + (n === 1 ? '' : 's') + ' on the string' + (n >= 3 ? ' ✓' : '') + '</span>'
+  +   '<button class="btn btn-p" id="btn-write" onclick="startWrite()" ' + (n < 3 ? 'disabled' : '') + '>Start writing →</button>'
+  + '</div></div>' + foot();
+}
+function toggleP(id){
+  const has = state.selP.indexOf(id) > -1;
+  if(!has && state.selP.length >= MAX_NOTES) return;
+  state.selP = has ? state.selP.filter(x => x !== id) : state.selP.concat(id);
+  saveDraft();
+  renderSelect();
+}
+function startWrite(){ state.curIdx = 0; go('write'); }
+
+function renderWrite(){
+  const pid = state.selP[state.curIdx], pr = P(pid), val = state.letters[pid] || '';
+  const allDone = state.selP.every(id => (state.letters[id] || '').trim());
+  const isLast = state.curIdx >= state.selP.length - 1;
+  const beads = state.selP.map(function(id, i){
+    const k = P(id).c, done = (state.letters[id] || '').trim(), cur = (i === state.curIdx);
+    return '<span onclick="jumpTo(' + i + ')" title="' + esc(P(id).label) + '" style="cursor:pointer;position:relative;z-index:1;'
+      + 'width:' + (cur ? 20 : 15) + 'px;height:' + (cur ? 20 : 15) + 'px;border-radius:50%;border:2.5px solid var(--ink);'
+      + 'background:' + ((done || cur) ? C[k] : '#fff') + ';box-shadow:' + (cur ? '0 0 0 4px ' + SOFT[k] : 'none') + ';transition:all 220ms ease"></span>';
+  }).join('');
+  app().innerHTML =
+  '<div class="screen" style="max-width:580px">'
+  + '<button class="btn btn-s" onclick="prevWrite()" style="margin-bottom:20px">← ' + (state.curIdx > 0 ? 'Previous' : 'Back') + '</button>'
+  + '<div style="position:relative;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:20px">'
+  +   '<span style="position:absolute;left:8%;right:8%;top:50%;height:3px;background:var(--line);border-radius:2px"></span>' + beads + '</div>'
+  + '<div style="text-align:center;margin-bottom:6px;font-size:12px;color:var(--ink45);letter-spacing:.1em;text-transform:uppercase">Note ' + (state.curIdx + 1) + ' of ' + state.selP.length + '</div>'
+  + '<h3 style="font-size:26px;text-align:center;margin-bottom:20px;color:' + DEEP[pr.c] + '">' + esc(pr.label) + '</h3>'
+  + '<div class="card" style="border-color:var(--line);border-width:2px;padding:24px 18px;box-shadow:var(--sh-lg);position:relative;overflow:hidden">'
+  +   '<div style="position:absolute;left:0;top:20px;bottom:20px;width:7px;border-radius:0 6px 6px 0;background:' + C[pr.c] + '"></div>'
+  +   '<textarea id="ta" maxlength="' + MAX_NOTE + '" placeholder="Say it like only you would…">' + esc(val) + '</textarea>'
+  +   '<div class="count" id="ta-count"></div></div>'
+  + '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:12px;flex-wrap:wrap">'
+  +   '<span style="font-size:14px;color:var(--ink45)">Signing off as ' + esc(state.sender) + '</span>'
+  +   (isLast
+      ? '<button class="btn btn-p" id="btn-seal" onclick="startSeal()" ' + (allDone ? '' : 'disabled') + '>Tie up the jar ✿</button>'
+      : '<button class="btn btn-p" id="btn-nxt" onclick="nextWrite()" ' + (val.trim() ? '' : 'disabled') + '>Next note →</button>')
+  + '</div></div>' + foot();
+  const ta = $('ta');
+  function paintCount(){
+    const n = ta.value.length, el = $('ta-count');
+    el.textContent = n + ' / ' + MAX_NOTE;
+    el.className = 'count' + (n > MAX_NOTE - 120 ? ' warn' : '');
+  }
+  let draftTimer = null;
+  ta.addEventListener('input', function(e){
+    state.letters[pid] = e.target.value;
+    const b = $(isLast ? 'btn-seal' : 'btn-nxt');
+    if(b) b.disabled = !(isLast ? state.selP.every(id => (state.letters[id] || '').trim()) : e.target.value.trim());
+    paintCount();
+    clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 400);
+  });
+  paintCount();
+  setTimeout(function(){ ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }, 60);
+}
+function jumpTo(i){ if(i !== state.curIdx){ state.curIdx = i; go('write'); } }
+function prevWrite(){ if(state.curIdx > 0){ state.curIdx--; go('write'); } else go('select'); }
+function nextWrite(){ if((state.letters[state.selP[state.curIdx]] || '').trim()){ state.curIdx++; go('write'); } }
+
+// ─── Seal sequence ───────────────────────────────────────────────────────────
+let sealing = false;
+async function startSeal(){ if(sealing) return; sealing = true; go('seal'); try { await runSeal(); } finally { sealing = false; } }
+
+async function retrySave(){ state.sealP = 'knotting'; renderSeal(); await wait(300); await persistJar(); }
+
+async function runSeal(){
+  state.sealP = 'collecting'; state.colCt = 0; renderSeal();
+  for(let i = 0; i < state.selP.length; i++){ await wait(320); state.colCt = i + 1; paintSealJar(); paintSealText(); }
+  await wait(420); state.sealP = 'tying';    paintSealJar(); paintSealText();
+  await wait(900); state.sealP = 'knotting'; paintSealJar(); paintSealText();
+  await persistJar();
+}
+
+async function persistJar(){
+  const id = state.pendingId || genId();
+  state.pendingId = id;
+  const data = { sender: state.sender.trim().slice(0, MAX_NAME), recipient: state.recip.trim().slice(0, MAX_NAME),
+    letters: state.selP.map(p => ({ promptId: p, text: (state.letters[p] || '').slice(0, MAX_NOTE) })),
+    createdAt: new Date().toISOString() };
+  try {
+    await saveJar(id, data);
+  } catch(err){
+    console.error('save failed', err);
+    state.saveError = err.message || 'Something went wrong';
+    state.sealP = 'error';
+    renderSeal();
+    return;
+  }
+  state.jarId = id; state.jarData = data; state.saveError = null;
+  clearDraft();
+  await wait(900); state.sealP = 'done'; renderSeal();
+}
+
+const SEAL_TITLE = { collecting:'Folding your notes…', tying:'Tying the band…', knotting:'Finishing the knot…', done:'Your jar is ready ✿' };
+function sealSub(st){
+  if(st === 'collecting') return state.colCt + ' of ' + state.selP.length + ' notes tucked in';
+  if(st === 'tying') return 'One band, two friends.';
+  if(st === 'knotting') return 'Almost there…';
+  return state.selP.length + ' notes for ' + state.recip;
+}
+
+function paintSealText(){
+  const t = $('seal-title'), s = $('seal-sub'), bar = $('seal-bar');
+  if(t) t.textContent = SEAL_TITLE[state.sealP];
+  if(s) s.textContent = sealSub(state.sealP);
+  if(bar) bar.style.width = state.sealP === 'collecting'
+    ? ((state.colCt / state.selP.length) * 62) + '%'
+    : (state.sealP === 'tying' ? '82%' : '100%');
+}
+
+function paintSealJar(){
+  const el = $('seal-jar'); if(!el) return;
+  const shown = state.sealP === 'collecting' ? state.colCt : state.selP.length;
+  el.innerHTML = jarSVG(240, shown, state.sealP === 'tying' || state.sealP === 'knotting');
+  const k = $('seal-knot');
+  if(k) k.style.opacity = (state.sealP === 'knotting') ? '1' : '0';
+}
+
+function renderSeal(){
+  if(state.sealP === 'error'){
+    app().innerHTML =
+    '<div class="screen" style="max-width:480px;text-align:center">'
+    + '<h2 style="font-size:32px;margin-bottom:10px">Couldn\'t tie the jar</h2>'
+    + '<div class="notice" style="margin:0 0 20px">'
+    +   '<b>' + esc(state.saveError) + '</b><br>Your notes are safe on this device &mdash; nothing is lost. '
+    +   'Check your connection and try again.</div>'
+    + '<button class="btn btn-p" onclick="retrySave()">Try again</button>'
+    + '<div style="margin-top:14px"><button class="btn btn-s" onclick="go(\'write\')">← Back to my notes</button></div>'
+    + '</div>' + foot();
+    return;
+  }
+  if(state.sealP === 'done'){
+    const shareUrl = location.origin + location.pathname + '#jar=' + state.jarId;
+    let conf = '';
+    for(let i = 0; i < 16; i++){
+      const sz = 9 + (i * 3) % 8;
+      conf += '<span style="position:absolute;top:-50px;left:' + (3 + i * 6.2) + '%;width:' + sz + 'px;height:' + sz + 'px;'
+        + 'border-radius:50%;background:' + C[WHEEL[i % 6]] + ';border:2px solid #2E2233;'
+        + 'animation:conf 2s ease-out ' + (i * 85) + 'ms forwards;opacity:0"></span>';
+    }
+    const initials = ((state.recip.trim()[0] || 'F') + '+' + (state.sender.trim()[0] || 'F')).toUpperCase();
+    app().innerHTML =
+    '<div class="screen" style="max-width:520px;text-align:center">'
+    + '<div style="position:relative;height:0">' + conf + '</div>'
+    + '<h2 style="font-size:34px;margin-bottom:6px">Your jar is ready ✿</h2>'
+    + '<p style="font-size:16px;color:var(--ink70);margin-bottom:16px">' + state.selP.length + ' notes for ' + esc(state.recip) + '</p>'
+    + '<div class="center">' + '<span class="wiggler">' + jarSVG(190, state.selP.length, true) + '</span></div>'
+    + '<div class="card" style="padding:22px;margin:16px 0;border-color:var(--line);border-width:2px">'
+    +   '<div style="margin-bottom:12px">' + beadWord(initials) + '</div>'
+    +   '<div class="fred" style="font-size:20px;margin-bottom:6px">From ' + esc(state.sender) + ', to ' + esc(state.recip) + '</div>'
+    +   '<div class="fred" style="font-size:15px;color:var(--pink-deep)">Happy Friendship Day ✿</div>'
+    +   '<div style="font-size:13px;color:var(--ink45);margin-top:8px">' + state.selP.length + ' notes · '
+    +     new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }) + '</div></div>'
+    + '<div class="panel" style="border-radius:999px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:10px;margin-bottom:20px">'
+    +   '<input type="text" id="share-url" value="' + esc(shareUrl) + '" readonly style="flex:1;border:none;background:transparent;font-size:13px;color:var(--ink70);padding:0;min-width:0">'
+    +   '<button class="btn" id="btn-copy" onclick="copyLink()" style="background:var(--pink-deep);color:#fff;padding:9px 18px;font-size:14px;white-space:nowrap">Copy</button></div>'
+    + '<div class="sharebtns">'
+    +   '<button class="btn btn-p" id="btn-share" onclick="shareJar()">Send it to ' + esc(state.recip) + ' →</button>'
+    +   '<a class="btn btn-s" style="text-decoration:none;display:inline-flex;align-items:center;padding:13px 22px" target="_blank" rel="noopener" href="https://wa.me/?text='
+    +     encodeURIComponent(state.sender + ' made you a Jar of Friendship ✿ open it here: ' + shareUrl) + '">WhatsApp</a>'
+    + '</div>'
+    + '<div style="margin-top:16px"><button class="btn btn-s" onclick="goHome()">← Back to start</button></div>'
+    + '</div>' + foot();
+    return;
+  }
+  app().innerHTML =
+  '<div class="screen" style="max-width:480px;text-align:center">'
+  + '<h2 id="seal-title" style="font-size:32px;margin-bottom:6px">' + SEAL_TITLE[state.sealP] + '</h2>'
+  + '<p id="seal-sub" style="font-size:16px;color:var(--ink70);margin-bottom:20px">' + sealSub(state.sealP) + '</p>'
+  + '<div style="position:relative;width:240px;margin:0 auto 22px">'
+  +   '<div id="seal-jar"></div>'
+  +   '<div id="seal-knot" style="position:absolute;top:27%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity 220ms ease">'
+  +     '<span style="display:inline-block;animation:stampIn 620ms cubic-bezier(.34,1.56,.64,1) both">' + knotSVG(64, 'pink') + '</span></div></div>'
+  + '<div class="thread"><i id="seal-bar" style="width:0%"></i></div>'
+  + '</div>' + foot();
+  paintSealJar(); paintSealText();
+}
+
+function shareJar(){
+  const url = location.origin + location.pathname + '#jar=' + state.jarId;
+  const payload = { title: 'Jar of Friendship',
+    text: state.sender + ' made you a jar of notes ✿', url: url };
+  if(navigator.share){
+    navigator.share(payload).catch(function(){ copyLink(); });
+  } else copyLink();
+}
+
+function copyLink(){
+  const url = location.origin + location.pathname + '#jar=' + state.jarId;
+  const done = function(){
+    const b = $('btn-copy'), s = $('btn-share');
+    if(b){ b.style.background = 'var(--mint)'; b.textContent = 'Copied ✓'; }
+    if(s) s.textContent = 'Link copied ✓';
+    setTimeout(function(){
+      if(b){ b.style.background = 'var(--pink-deep)'; b.textContent = 'Copy'; }
+      if(s) s.textContent = 'Send it to ' + state.recip + ' →';
+    }, 2000);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, done);
+  else { const i = $('share-url'); if(i){ i.select(); try { document.execCommand('copy'); } catch(e){} } done(); }
+}
+
+// ─── Recipient ───────────────────────────────────────────────────────────────
+function renderRecipient(){
+  const d = state.jarData;
+  const cards = d.letters.map(function(l, i){
+    const pr = P(l.promptId), op = state.opened.has(l.promptId);
+    return '<div class="gift ' + (op ? 'op' : '') + '" onclick="viewLetter(' + i + ')" role="button" tabindex="0" '
+      + 'onkeydown="kbd(event,function(){viewLetter(' + i + ')})" style="animation-delay:' + (i * 45) + 'ms">'
+      + (op ? '<span class="pill">opened</span>' : '')
+      + '<div style="opacity:' + (op ? .45 : 1) + '">' + knotSVG(60, pr.c) + '</div>'
+      + '<div class="fred" style="font-size:17px;font-weight:500;line-height:1.35;margin-top:12px">' + esc(pr.label) + '</div></div>';
+  }).join('');
+  app().innerHTML =
+  '<div class="screen">'
+  + '<div style="text-align:center;margin-bottom:30px">'
+  +   '<div class="center"><span class="wiggler">' + jarSVG(152, d.letters.length, true) + '</span></div>'
+  +   '<div style="margin:8px 0 14px">' + beadWord('BESTFRIENDS') + '</div>'
+  +   '<div style="margin-bottom:14px"><span class="badge">Happy Friendship Day, ' + esc(d.recipient) + '</span></div>'
+  +   '<h2 style="font-size:clamp(28px,7vw,38px);margin-bottom:8px">A jar just for you</h2>'
+  +   '<p style="font-size:17px;color:var(--ink70)">' + d.letters.length + ' notes, strung together by ' + esc(d.sender) + '</p>'
+  +   '<p style="font-size:14px;color:var(--ink45);margin-top:8px">' + state.opened.size + ' of ' + d.letters.length + ' opened · the rest can wait for their day</p>'
+  + '</div>'
+  + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px">' + cards + '</div>'
+  + '<div style="text-align:center;margin-top:42px">'
+  +   '<div style="display:flex;justify-content:center;margin-bottom:18px">' + bandSVG(320, ['violet','coral'], 'YOUR TURN') + '</div>'
+  +   '<p class="fred" style="font-size:19px;font-weight:500;color:var(--ink70);margin-bottom:16px">Your turn &mdash; string one back?</p>'
+  +   '<button class="btn btn-p" onclick="startNewJar()">Make a jar for ' + esc(d.sender) + ' →</button>'
+  + '</div></div>' + foot();
+}
+
+function viewLetter(idx){ state.viewing = state.jarData.letters[idx]; renderEnvelope(); }
+
+function renderEnvelope(){
+  const l = state.viewing, pr = P(l.promptId), col = C[pr.c], deep = DEEP[pr.c];
+  const o = document.createElement('div');
+  o.id = 'env-overlay'; o.className = 'overlay';
+  o.innerHTML =
+  '<div style="width:100%;max-width:440px">'
+  + '<div id="env-box" class="card" style="background:' + SOFT[pr.c] + ';min-height:300px;max-height:88vh;overflow-y:auto;overflow-x:hidden;position:relative;box-shadow:0 18px 50px rgba(46,34,51,.32);transition:min-height 520ms cubic-bezier(.25,.46,.45,.94)">'
+  +   '<div id="env-flap" style="position:absolute;top:0;left:0;right:0;height:52%;background:' + col + ';clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;transition:transform 520ms cubic-bezier(.25,.46,.45,.94),opacity 320ms ease;z-index:3"></div>'
+  +   '<div id="env-knot" style="position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);z-index:4;cursor:pointer" onclick="untie()">' + knotSVG(78, pr.c) + '</div>'
+  +   '<div id="env-label" style="position:absolute;bottom:24px;left:0;right:0;text-align:center;padding:0 18px;z-index:2">'
+  +     '<div class="fred" style="font-size:19px">' + esc(pr.label) + '</div>'
+  +     '<div style="font-size:13px;color:var(--ink70);margin-top:7px">Tap the knot to untie</div></div>'
+  +   '<div id="env-note" style="display:none;padding:28px 20px 22px;position:relative;z-index:6">'
+  +     '<div style="display:flex;justify-content:center;margin-bottom:12px">' + knotSVG(38, pr.c) + '</div>'
+  +     '<div class="fred" style="font-size:18px;color:' + deep + ';text-align:center;margin-bottom:16px">' + esc(pr.label) + '</div>'
+  +     '<div style="background:#fff;border:2.5px solid var(--ink);border-radius:18px;padding:20px 18px;min-height:170px">'
+  +       '<div class="note-body">' + esc(l.text) + '</div>'
+  +       '<div style="font-family:\'Caveat\',cursive;font-size:26px;color:' + deep + ';text-align:right;margin-top:20px">&mdash; always in your corner, ' + esc(state.jarData.sender) + '</div></div>'
+  +     '<div style="text-align:center;margin-top:14px;font-size:13px;color:var(--ink70)">Tap outside to close</div></div>'
+  + '</div></div>';
+  o.addEventListener('click', function(e){ if(e.target === o) closeEnvelope(); });
+  document.body.appendChild(o);
+  const onEsc = function(e){ if(e.key === 'Escape'){ document.removeEventListener('keydown', onEsc); closeEnvelope(); } };
+  document.addEventListener('keydown', onEsc);
+  const k = $('env-knot'); if(k){ k.setAttribute('role','button'); k.setAttribute('tabindex','0');
+    k.setAttribute('aria-label','Untie this note'); k.addEventListener('keydown', function(e){ kbd(e, untie); }); setTimeout(function(){ k.focus(); }, 80); }
+}
+
+function untie(){
+  const knot = $('env-knot'), flap = $('env-flap'), label = $('env-label'), note = $('env-note'), box = $('env-box');
+  if(!knot || knot.dataset.done) return;
+  knot.dataset.done = '1';
+  const burst = document.createElement('div');
+  burst.style.cssText = 'position:absolute;top:50%;left:50%;z-index:5;pointer-events:none';
+  for(let i = 0; i < 12; i++){
+    const a = i * 30 * Math.PI / 180, sp = document.createElement('span');
+    sp.style.cssText = 'position:absolute;top:0;left:0;width:12px;height:12px;border-radius:50%;background:' + C[WHEEL[i % 6]]
+      + ';border:2px solid #2E2233;--dx:' + (Math.cos(a) * (52 + i * 4)) + 'px;--dy:' + (Math.sin(a) * (52 + i * 4)) + 'px;'
+      + 'animation:burst 700ms ease-out ' + (i * 22) + 'ms forwards';
+    burst.appendChild(sp);
+  }
+  knot.parentElement.appendChild(burst);
+  knot.querySelector('svg').style.animation = 'knotPop 520ms ease-out forwards';
+  setTimeout(function(){ flap.style.transform = 'rotateX(180deg)'; flap.style.opacity = '0'; }, 500);
+  setTimeout(function(){
+    knot.style.display = 'none'; label.style.display = 'none'; burst.remove();
+    flap.style.zIndex = '0'; box.style.minHeight = '420px'; note.style.display = 'block';
+  }, 1050);
+}
+
+function closeEnvelope(){
+  if(state.viewing) state.opened.add(state.viewing.promptId);
+  if(state.jarId) writeOpened(state.jarId, state.opened);
+  state.viewing = null;
+  const o = $('env-overlay'); if(o) o.remove();
+  renderRecipient();
+}
+
+// ─── Nav ─────────────────────────────────────────────────────────────────────
+function go(screen){ state.screen = screen; render(); window.scrollTo(0, 0); }
+
+function resumeDraft(){
+  const d = readDraft(); if(!d) return;
+  Object.assign(state, { sender:d.sender || '', recip:d.recip || '', selP:d.selP || [],
+    letters:d.letters || {}, curIdx: Math.min(d.curIdx || 0, (d.selP || []).length - 1) });
+  go(state.selP.length ? 'write' : 'select');
+}
+
+function goHome(){
+  Object.assign(state, { sender:'', recip:'', selP:[], letters:{}, curIdx:0, jarId:null,
+    jarData:null, opened:new Set(), viewing:null, sealP:'collecting', colCt:0 });
+  history.replaceState(null, '', location.pathname);
+  go('landing');
+}
+
+function startNewJar(){
+  const s = state.jarData.sender, r = state.jarData.recipient;
+  Object.assign(state, { sender:r, recip:s, selP:[], letters:{}, curIdx:0, jarId:null,
+    jarData:null, opened:new Set(), viewing:null, sealP:'collecting', colCt:0 });
+  history.replaceState(null, '', location.pathname);
+  go('select');
+}
+
+function renderNotFound(msg){
+  app().innerHTML =
+  '<div class="screen" style="max-width:480px;text-align:center">'
+  + '<div class="center" style="margin-bottom:10px">' + jarSVG(150, 5, false) + '</div>'
+  + '<h2 style="font-size:32px;margin-bottom:10px">This jar isn\'t here</h2>'
+  + '<p style="font-size:16px;color:var(--ink70);margin-bottom:20px">'
+  +   esc(msg || 'The link may be mistyped, or the jar was never finished. Ask your friend to send it again.') + '</p>'
+  + '<button class="btn btn-p" onclick="goHome()">Make your own jar →</button>'
+  + '</div>' + foot();
+}
+
+async function init(){
+  initBeads();
+  const m = location.hash.match(/#jar=([A-Za-z0-9]{8})/);
+  if(!m){
+    const d = readDraft();
+    if(d){ state.sender = d.sender || ''; state.recip = d.recip || ''; }
+    state.screen = 'landing'; render(); return;
+  }
+  renderLoading();
+  let data = null, failed = null;
+  try { data = await loadJar(m[1]); } catch(e){ failed = e.message || 'Could not reach the jar'; }
+  if(failed){ renderNotFound('We couldn\'t load this jar just now — ' + failed.toLowerCase() + '. Try refreshing in a moment.'); return; }
+  if(!data){ renderNotFound(); return; }
+  state.jarData = data; state.jarId = m[1];
+  state.opened = readOpened(m[1]);
+  state.screen = 'recipient';
+  render();
+}
+init();
+</script>
+</body>
+</html>
