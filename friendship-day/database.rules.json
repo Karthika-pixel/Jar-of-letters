@@ -7,7 +7,7 @@
       "$jarId": {
         ".read": true,
         ".write": "!data.exists() && newData.exists()",
-        ".validate": "$jarId.length === 8 && newData.hasChildren(['sender','recipient','letters','createdAt'])",
+        ".validate": "$jarId.length == 8 && newData.hasChildren(['sender','recipient','letters','createdAt'])",
 
         "sender":    { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30" },
         "recipient": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30" },
