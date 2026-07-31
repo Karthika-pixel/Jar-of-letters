@@ -9,7 +9,7 @@
 <link rel="canonical" href="https://jar-of-friendship.pages.dev/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jar of Friendship">
-<meta property="og:title" content="Jar of Friendship — letters for every moment">
+<meta property="og:title" content="Jar of Friendship: letters for every moment">
 <meta property="og:description" content="Write a little letter for every mood, tie up the jar, and send your friend a link they can open all year.">
 <meta property="og:url" content="https://jar-of-friendship.pages.dev/">
 <meta property="og:image" content="https://jar-of-friendship.pages.dev/og.png">
@@ -17,7 +17,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Jar of Friendship">
-<meta name="twitter:description" content="Letters for every moment — one for every mood.">
+<meta name="twitter:description" content="Letters for every moment, one for every mood.">
 <meta name="twitter:image" content="https://jar-of-friendship.pages.dev/og.png">
 <link rel="icon" href="/icon-180.png">
 <link rel="apple-touch-icon" href="/icon-180.png">
@@ -47,7 +47,7 @@ body{
   background-attachment:fixed;
   font-family:'Nunito',system-ui,sans-serif; color:var(--ink);
   min-height:100vh; overflow-x:hidden; -webkit-font-smoothing:antialiased;
-  padding-bottom:104px;
+  padding-bottom:28px;
 }
 /* woven paper grain, drawn once and reused everywhere */
 
@@ -70,6 +70,9 @@ p,span,div,button,a,.label{overflow-wrap:break-word}
 @keyframes sparkle{0%{transform:translate(-50%,-50%) scale(0) rotate(0);opacity:0}35%{opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.1) rotate(140deg);opacity:0}}
 @keyframes pageTurnOut{0%{transform:perspective(1600px) rotateY(0);opacity:1}100%{transform:perspective(1600px) rotateY(-88deg) translateX(-14%);opacity:0}}
 @keyframes pageTurnIn{0%{transform:perspective(1600px) rotateY(88deg) translateX(14%);opacity:0}100%{transform:perspective(1600px) rotateY(0);opacity:1}}
+@keyframes flapOpen{0%{transform:rotateX(0)}100%{transform:rotateX(-168deg)}}
+@keyframes letterRise{0%{transform:translateY(32%) scale(.95);opacity:0}30%{opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes envSink{0%{opacity:1}100%{opacity:0;transform:translateY(16px)}}
 @keyframes shine{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
@@ -80,7 +83,7 @@ p,span,div,button,a,.label{overflow-wrap:break-word}
 .drifts{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .drifter{position:absolute;bottom:-40px;animation:drift linear infinite;will-change:transform}
 .screen{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:26px 18px 30px;animation:fadeUp 420ms ease}
-.foot{position:relative;z-index:1;text-align:center;padding:6px 18px 22px;font-size:13px;color:var(--ink45)}
+.foot{position:relative;z-index:1;text-align:center;padding:34px 18px 40px;font-size:13px;color:var(--ink45)}
 .foot b{color:var(--rose-deep);font-weight:700}
 .center{display:flex;justify-content:center;align-items:center}
 .row{display:flex;align-items:center;gap:10px}
@@ -142,19 +145,6 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
 .opened-tag{position:absolute;left:16px;bottom:12px;font-size:11px;font-weight:700;letter-spacing:.09em;
   text-transform:uppercase;color:var(--ink45)}
 
-/* ── bottom nav ─────────────────────────────────────────── */
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:center;padding:0 12px 12px;pointer-events:none}
-.navin{pointer-events:auto;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.95);
-  backdrop-filter:blur(10px);border:2.5px solid var(--ink);border-radius:999px;padding:6px;box-shadow:var(--sh-card)}
-.navb{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;
-  padding:7px 15px;border-radius:999px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--ink45);transition:all 180ms}
-.navb.on{background:var(--rose-soft);color:var(--rose-deep)}
-.navb:hover{color:var(--rose-deep)}
-.navb svg{display:block}
-.fab{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);cursor:pointer;color:#fff;font-size:24px;line-height:1;
-  background:var(--rose);box-shadow:3px 3px 0 var(--ink);margin:0 4px;
-  display:grid;place-items:center;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)}
-.fab:hover{transform:translateY(-2px) rotate(90deg)}
 
 /* ── music pill ─────────────────────────────────────────── */
 .music{position:fixed;top:12px;right:12px;z-index:55;display:flex;align-items:center;gap:9px;
@@ -173,7 +163,16 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
 .ov{position:fixed;inset:0;z-index:1000;background:rgba(59,48,40,.55);backdrop-filter:blur(8px);
   display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeUp 280ms ease;overflow-y:auto}
 .ovcard{width:100%;max-width:460px;position:relative}
-.note-body{font-family:'Caveat',cursive;font-size:25px;line-height:34px;white-space:pre-wrap;word-break:break-word}
+.envwrap{position:relative;perspective:1400px}
+.envflap{position:absolute;left:0;right:0;top:0;height:54%;z-index:6;transform-origin:top center;
+  clip-path:polygon(0 0,100% 0,50% 100%);border-radius:var(--r-lg) var(--r-lg) 0 0;
+  animation:flapOpen 620ms cubic-bezier(.5,.05,.35,1) 80ms both;backface-visibility:hidden}
+.envpocket{position:absolute;left:0;right:0;bottom:0;height:46%;z-index:7;border-radius:0 0 var(--r-lg) var(--r-lg);
+  animation:envSink 420ms ease 940ms both}
+.letter-rise{animation:letterRise 760ms cubic-bezier(.22,.9,.3,1.02) 560ms both}
+.paper-rules{background-image:repeating-linear-gradient(transparent,transparent 33px,rgba(46,34,51,.09) 33px,rgba(46,34,51,.09) 34px);
+  background-position:0 6px;padding:2px 0 6px}
+.note-body{font-family:'Caveat',cursive;font-size:25px;line-height:34px;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
 .mediabox{border:2.5px dashed var(--ink);border-radius:var(--r-sm);padding:14px;text-align:center;background:var(--paper-hi)}
 .thumb{width:100%;border-radius:var(--r-sm);border:3px solid var(--ink);display:block;
   max-height:300px;object-fit:contain;background:var(--paper-lo)}
@@ -190,17 +189,16 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
   .beadword{gap:3.5px;padding:0 10px}
   .music{top:8px;right:8px;left:8px;justify-content:flex-start;padding:5px 10px 5px 6px}
   .music .tt{max-width:none}
-  .foot{padding-bottom:18px}
+  .foot{padding:26px 14px 32px}
 }
 </style>
 </head>
 <body>
 <div class="drifts" id="drifts"></div>
 <div id="app"></div>
-<div id="navhost"></div>
 <script>
 /* ══════════════════════════════════════════════════════════════════
-   Jar of Friendship — letters for every moment
+   Jar of Friendship: letters for every moment
    Single file. Jar letters live in Firebase; memories live on device.
    ══════════════════════════════════════════════════════════════════ */
 
@@ -229,12 +227,12 @@ const withTimeout = (p, ms, label) => Promise.race([p,
 
 async function saveJar(id, data) {
   if (db) return withTimeout(db.ref('jars/' + id).set(data), 12000, 'Saving took too long');
-  if (DEV_LOCAL) return localStorage.setItem('jar-' + id, JSON.stringify(data));
+  if (DEV_LOCAL) return store.set('jar-' + id, JSON.stringify(data));
   throw new Error('No connection to the database');
 }
 async function loadJar(id) {
   if (db) { const s = await withTimeout(db.ref('jars/' + id).once('value'), 12000, 'Loading took too long'); return s.val(); }
-  if (DEV_LOCAL) { const d = localStorage.getItem('jar-' + id); return d ? JSON.parse(d) : null; }
+  if (DEV_LOCAL) { const d = store.get('jar-' + id); return d ? JSON.parse(d) : null; }
   throw new Error('No connection to the database');
 }
 
@@ -383,7 +381,7 @@ function beadWord(word) {
   ).join('') + '</span>';
 }
 
-/* the tied bow — the emblem on a letter waiting to be opened */
+/* the tied bow: the emblem on a letter waiting to be opened */
 function bowSVG(size, key) {
   const col = HUE[key || 'rose'].ink, u = 'b' + (++uid);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100" aria-hidden="true">
@@ -453,13 +451,13 @@ function toast(msg) {
   setTimeout(() => { if (t.parentNode) t.remove(); }, 2600);
 }
 
-const foot = () => '<div class="foot"><div class="center" style="margin-bottom:6px">' + bandSVG(330, ['rose','butter'], 'FRIENDS FOREVER')
-  + '</div>Made with care by <b>Karthika</b> &nbsp;·&nbsp; Friendship Day 2026</div>';
+const foot = () => '<div class="foot"><div class="center" style="margin-bottom:18px">' + bandSVG(330, ['rose','butter'], 'FRIENDS FOREVER')
+  + '</div><div style="line-height:1.7">Made with care by <b>Karthika</b> &nbsp;·&nbsp; Friendship Day 2026</div></div>';
 
 /* ══ media attached to letters ═══════════════════════════════════
    A jar has to open on someone else's phone, so media travels with
    the jar. Photos and voice notes are compressed hard and inlined.
-   Video needs real object storage — set MEDIA_ENDPOINT to enable it.
+   Video needs real object storage; set MEDIA_ENDPOINT to enable it.
    ═══════════════════════════════════════════════════════════════ */
 const MEDIA_LIMITS = { image: 150000, audio: 140000 };   // bytes, after compression
 const VOICE_MAX_SEC = 30;
@@ -473,7 +471,7 @@ function fileToDataURL(blob) {
   });
 }
 
-/* Shrink a photo until it fits the budget — quality first, then size. */
+/* Shrink a photo until it fits the budget: quality first, then size. */
 function shrinkImage(file) {
   return new Promise((res, rej) => {
     const img = new Image(), url = URL.createObjectURL(file);
@@ -498,7 +496,7 @@ function shrinkImage(file) {
         }
         if (!best) return rej(new Error('That image could not be processed'));
         if (best.blob.size > MEDIA_LIMITS.image)
-          return rej(new Error('That photo is too detailed to fit — try a simpler one'));
+          return rej(new Error('That photo is too detailed to fit. Try a simpler one'));
         res(best);
       })();
     };
@@ -528,11 +526,11 @@ async function prepareMedia(file, kind) {
   if (kind === 'audio') {
     if (MEDIA_ENDPOINT) return { kind, src: await uploadToEndpoint(file, kind) };
     if (file.size > MEDIA_LIMITS.audio)
-      throw new Error('That clip is too long to travel with the jar — keep it under ' + VOICE_MAX_SEC + ' seconds');
+      throw new Error('That clip is too long to travel with the jar. Keep it under ' + VOICE_MAX_SEC + ' seconds');
     return { kind, src: await fileToDataURL(file) };
   }
   if (kind === 'video') {
-    if (!MEDIA_ENDPOINT) throw new Error('Video needs media storage switched on — photos and voice notes work now');
+    if (!MEDIA_ENDPOINT) throw new Error('Video needs media storage switched on. Photos and voice notes work now');
     if (file.size > 120 * 1024 * 1024) throw new Error('That video is over 120MB');
     return { kind, src: await uploadToEndpoint(file, kind) };
   }
@@ -574,25 +572,33 @@ function stopRecording() {
   });
 }
 
+/* Some browsers hand back a localStorage that throws on every call
+   (private mode, blocked cookies). Everything goes through here. */
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+
 /* ── drafts + opened state ───────────────────────────────────── */
 const DRAFT_KEY = 'jof-draft-v2';
 function saveDraft() {
   try {
     if (!state.sender && !state.recip && !state.selP.length) return;
-    localStorage.setItem(DRAFT_KEY, JSON.stringify({ sender: state.sender, recip: state.recip,
+    store.set(DRAFT_KEY, JSON.stringify({ sender: state.sender, recip: state.recip,
       selP: state.selP, letters: state.letters, media: state.media, curIdx: state.curIdx, t: Date.now() }));
   } catch (e) { /* draft may exceed quota once photos are attached; not fatal */ }
 }
 function readDraft() {
   try {
-    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+    const d = JSON.parse(store.get(DRAFT_KEY) || 'null');
     if (!d || !d.t || Date.now() - d.t > 12096e5 || !d.selP || !d.selP.length) return null;
     return d;
   } catch (e) { return null; }
 }
-const clearDraft = () => { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} };
-const readOpened = id => { try { return new Set(JSON.parse(localStorage.getItem('jof-opened-' + id) || '[]')); } catch (e) { return new Set(); } };
-const writeOpened = (id, set) => { try { localStorage.setItem('jof-opened-' + id, JSON.stringify([...set])); } catch (e) {} };
+const clearDraft = () => store.del(DRAFT_KEY);
+const readOpened = id => { try { return new Set(JSON.parse(store.get('jof-opened-' + id) || '[]')); } catch (e) { return new Set(); } };
+const writeOpened = (id, set) => store.set('jof-opened-' + id, JSON.stringify([...set]));
 
 /* ══ music: two original loops, silent until asked for ══ */
 const TRACKS = [
@@ -601,7 +607,11 @@ const TRACKS = [
 ];
 const music = { el: null, i: 0, playing: false };
 
-function initMusic() { music.i = (+(localStorage.getItem('jof-track') || 0)) % TRACKS.length; paintMusic(); }
+function initMusic() {
+  music.i = (+(store.get('jof-track') || 0)) % TRACKS.length;
+  if (!Number.isFinite(music.i) || music.i < 0) music.i = 0;
+  paintMusic();
+}
 function ensureAudio() {
   if (music.el) return music.el;
   const a = new Audio();
@@ -619,7 +629,7 @@ async function toggleMusic() {
 }
 function nextTrack() {
   music.i = (music.i + 1) % TRACKS.length;
-  try { localStorage.setItem('jof-track', music.i); } catch (e) {}
+  store.set('jof-track', music.i);
   const a = ensureAudio(); a.src = TRACKS[music.i].src;
   if (music.playing) a.play().catch(() => {});
   paintMusic();
@@ -704,7 +714,6 @@ function render() {
   const map = { loading: renderLoading, landing: renderLanding, names: renderNames, select: renderSelect,
                 write: renderWrite, seal: renderSeal, recipient: renderRecipient };
   (map[state.screen] || renderLanding)();
-  paintNav();
 }
 function go(screen) { state.screen = screen; render(); window.scrollTo(0, 0); }
 
@@ -717,30 +726,10 @@ function mountChrome() {
   }
   initMusic();
 }
-function paintNav() {
-  const host = $('navhost'); if (!host) return;
-  const s = state.screen;
-  if (s === 'loading' || s === 'seal') { host.innerHTML = ''; return; }
-  const ic = {
-    jar: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M7 8h10l-.8 12H7.8z"/><path d="M8.5 8V5.5h7V8"/></svg>',
-    mail: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 8l9 7 9-7"/></svg>',
-    book: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M4 5.5A2 2 0 016 4h5v16H6a2 2 0 01-2-1.5z"/><path d="M20 5.5A2 2 0 0018 4h-5v16h5a2 2 0 002-1.5z"/></svg>'
-  };
-  const onRecipient = s === 'recipient';
-  const writing = s === 'names' || s === 'select' || s === 'write';
-  host.innerHTML =
-    `<div class="nav"><div class="navin">
-      <button class="navb ${s === 'landing' ? 'on' : ''}" onclick="goHome()">${ic.jar}<span>Home</span></button>
-      <button class="navb ${writing ? 'on' : ''}" onclick="startFresh()">${ic.mail}<span>${writing ? 'Writing' : 'New jar'}</span></button>
-      <button class="navb ${onRecipient ? 'on' : ''}" onclick="${onRecipient ? 'exportPDF()' : 'nudgeKeepsake()'}">${ic.book}<span>Keepsake</span></button>
-    </div></div>`;
-}
-function nudgeKeepsake() { toast('Open a jar first — then you can save it as a PDF'); }
-function startFresh() { if (state.screen !== 'names') go('names'); }
 
 /* ══ screens ══ */
 function renderLoading() {
-  app().innerHTML = `<div style="min-height:70vh;display:grid;place-items:center"><div class="bobber">${bowSVG(70, 'rose')}</div></div>`;
+  app().innerHTML = `<div style="min-height:70vh;display:grid;place-items:center"><div class="bobber">${stampSVG(70, 'rose', 'envelope', 20)}</div></div>`;
 }
 
 function renderLanding() {
@@ -748,13 +737,13 @@ function renderLanding() {
   app().innerHTML =
   `<div class="screen" style="max-width:560px">
     <div class="sheet" style="padding:30px 26px 28px;text-align:center">
-      <div style="position:absolute;top:14px;right:14px">${bowSVG(54, 'rose')}</div>
+      <div style="position:absolute;top:14px;right:14px">${stampSVG(54, 'rose', 'heart', 20, { marked: true })}</div>
       <div class="center" style="margin:6px 0 2px"><span class="bobber">${jarSVG(164, 9, true)}</span></div>
       <div class="center" style="margin:2px 0 8px">${beadWord('FRIENDS')}</div>
       <h1 style="font-size:clamp(38px,9.5vw,52px);margin:2px 0 2px">Jar of Friendship</h1>
       <p class="script" style="font-size:23px;color:var(--ink70);margin-bottom:16px">Letters for every moment</p>
       <p style="font-size:16px;line-height:1.62;color:var(--ink70);max-width:390px;margin:0 auto 20px">
-        Write a little letter for every mood — slip in a photo or a voice note — then tie up the jar
+        Write a little letter for every mood, slip in a photo or a voice note, then tie up the jar
         and send your friend one link they can open all year.</p>
       <div class="center" style="margin:4px 0 14px">${bandSVG(250, ['sage','lilac'])}</div>
       <button class="btn btn-p" onclick="go('names')">Start a jar</button>
@@ -771,7 +760,7 @@ function renderNames() {
     <h2 style="font-size:38px;margin-bottom:4px">Who's it for?</h2>
     <p style="font-size:15.5px;color:var(--ink70);margin-bottom:20px">Two names, and we'll start writing.</p>
     <div class="sheet" style="padding:22px 20px 24px">
-      <div style="position:absolute;top:12px;right:12px;opacity:.9">${bowSVG(44, 'butter')}</div>
+      <div style="position:absolute;top:12px;right:12px;opacity:.9">${stampSVG(46, 'butter', 'sun', 15)}</div>
       <div style="margin-bottom:16px;padding-right:56px"><label class="fl" for="inp-sender">Your name</label>
         <input type="text" id="inp-sender" placeholder="You" value="${esc(state.sender)}" maxlength="${MAX_NAME}" autocomplete="given-name" enterkeyhint="next"></div>
       <div class="center" style="margin:2px 0 10px">${bandSVG(210, ['butter','blue'], '+')}</div>
@@ -797,7 +786,7 @@ function renderSelect() {
     return `<div class="sheet lcard ${sel ? '' : ''}" onclick="toggleP('${p.id}')" role="checkbox" tabindex="0"
       aria-checked="${sel}" onkeydown="kbd(event,function(){toggleP('${p.id}')})"
       style="animation-delay:${i * 28}ms;${sel ? 'border-color:' + HUE[p.c].ink + ';box-shadow:0 0 0 2px ' + HUE[p.c].tint + ', var(--sh-card)' : ''}">
-      <div class="center" style="margin-bottom:10px">${bowSVG(54, p.c)}</div>
+      <div class="center" style="margin-bottom:10px">${stampSVG(56, p.c, p.m, p.d, { marked: sel })}</div>
       <div class="label" style="padding-right:0;text-align:center">${esc(p.label)}</div>
       <div class="mini" style="font-size:12px;font-weight:700;text-align:center;color:${sel ? HUE[p.c].deep : 'var(--ink45)'};letter-spacing:.06em;text-transform:uppercase">
         ${sel ? '✓ in the jar' : 'tap to add'}</div>
@@ -809,7 +798,7 @@ function renderSelect() {
     <button class="btn btn-s" onclick="go('names')" style="margin-bottom:18px">← Back</button>
     <h2 style="font-size:38px;margin-bottom:4px">Choose the moments</h2>
     <p style="font-size:15.5px;color:var(--ink70);margin-bottom:20px">
-      Every letter waits for its day. Pick at least 3 — the memory ones are lovely to write.</p>
+      Every letter waits for its day. Pick at least 3 - the memory ones are lovely to write.</p>
     <div class="grid" style="margin-bottom:26px">${cards}</div>
     <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:12px">
       <span class="hand" style="font-size:22px;color:${n >= 3 ? 'var(--rose-deep)' : 'var(--ink45)'}">
@@ -837,7 +826,7 @@ function renderWrite() {
     return `<button onclick="jumpTo(${i})" title="${esc(q.label)}" aria-label="${esc(q.label)}"
       style="border:none;background:none;cursor:pointer;padding:7px 6px;min-height:44px;min-width:40px;line-height:0;opacity:${cur ? 1 : done ? .82 : .42};
       transform:scale(${cur ? 1.18 : 1}) rotate(${(i % 3 - 1) * 3}deg);transition:all 220ms cubic-bezier(.34,1.56,.64,1)">
-      ${bowSVG(cur ? 32 : 26, q.c)}</button>`;
+      ${stampSVG(cur ? 30 : 25, q.c, q.m, q.d, { marked: !!done })}</button>`;
   }).join('');
   app().innerHTML =
   `<div class="screen" style="max-width:580px">
@@ -847,7 +836,7 @@ function renderWrite() {
       Letter ${state.curIdx + 1} of ${state.selP.length}</div>
     <h3 class="hand" style="font-size:30px;text-align:center;margin-bottom:16px;color:${HUE[pr.c].deep}">${esc(pr.label)}</h3>
     <div class="sheet ruled" style="padding:22px 16px 16px;position:relative">
-      <div style="position:absolute;top:10px;right:12px;opacity:.95">${bowSVG(46, pr.c)}</div>
+      <div style="position:absolute;top:10px;right:12px;opacity:.95">${stampSVG(48, pr.c, pr.m, pr.d)}</div>
       <div style="position:absolute;left:0;top:18px;bottom:18px;width:5px;border-radius:0 4px 4px 0;background:${HUE[pr.c].ink};opacity:.75"></div>
       <textarea id="ta" maxlength="${MAX_NOTE}" placeholder="Say it the way only you would…" style="padding-right:64px">${esc(val)}</textarea>
       <div class="count" id="ta-count"></div>
@@ -925,7 +914,7 @@ function pickMedia(pid, kind) {
 async function recordVoice(pid) {
   const zone = $('mediaZone');
   zone.innerHTML = `<div class="mediabox"><div class="hand" style="font-size:26px;color:var(--rose-deep)" id="rec-t">0.0s</div>
-    <div style="font-size:12.5px;color:var(--ink70);margin:6px 0 10px">Recording — up to ${VOICE_MAX_SEC} seconds</div>
+    <div style="font-size:12.5px;color:var(--ink70);margin:6px 0 10px">Recording - up to ${VOICE_MAX_SEC} seconds</div>
     <button class="btn btn-p" id="rec-stop">Stop and keep it</button></div>`;
   const stop = async () => {
     const blob = await stopRecording();
@@ -1017,7 +1006,7 @@ function renderSeal() {
     `<div class="screen" style="max-width:470px;text-align:center">
       <h2 style="font-size:36px;margin-bottom:10px">Couldn't tie the jar</h2>
       <div class="notice" style="margin-bottom:18px"><b>${esc(state.saveError)}</b><br>
-        Your letters are safe on this device — nothing is lost. Check your connection and try again.</div>
+        Your letters are safe on this device - nothing is lost. Check your connection and try again.</div>
       <button class="btn btn-p" onclick="retrySave()">Try again</button>
       <div style="margin-top:12px"><button class="btn btn-s" onclick="go('write')">← Back to my letters</button></div>
     </div>` + foot();
@@ -1032,7 +1021,7 @@ function renderSeal() {
       <p class="script" style="font-size:22px;color:var(--ink70);margin-bottom:14px">${state.selP.length} letters for ${esc(state.recip)}</p>
       <div class="center">${jarSVG(184, state.selP.length, true)}</div>
       <div class="sheet" style="padding:20px;margin:14px 0 14px">
-        <div style="position:absolute;top:10px;right:10px">${bowSVG(46, 'rose')}</div>
+        <div style="position:absolute;top:10px;right:10px">${stampSVG(48, 'rose', 'heart', 20, { marked: true, animate: true, delay: 420 })}</div>
         <div class="center" style="margin-bottom:8px">${beadWord(((state.recip.trim()[0] || 'F') + '+' + (state.sender.trim()[0] || 'F')).toUpperCase())}</div>
         <div class="hand" style="font-size:26px;padding-right:52px">From ${esc(state.sender)}, to ${esc(state.recip)}</div>
         <div style="font-size:14px;color:var(--rose-deep);font-weight:700;margin-top:2px">Happy Friendship Day</div>
@@ -1044,9 +1033,8 @@ function renderSeal() {
         <button class="btn" id="btn-copy" onclick="copyLink()" style="background:var(--rose-deep);color:#fff;padding:12px 20px;min-height:44px;font-size:14px;white-space:nowrap;border:2.5px solid var(--ink)">Copy</button>
       </div>
       <div class="row" style="justify-content:center;flex-wrap:wrap;gap:10px">
-        <button class="btn btn-p" id="btn-share" onclick="shareJar()">Send it to ${esc(state.recip)} →</button>
-        <a class="btn btn-s" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;padding:12px 20px"
-           href="https://wa.me/?text=${encodeURIComponent(state.sender + ' made you a Jar of Friendship — open it here: ' + shareUrl)}">WhatsApp</a>
+        <a class="btn btn-p" id="btn-email" style="text-decoration:none;display:inline-flex;align-items:center"
+           href="mailto:?subject=${encodeURIComponent('A Jar of Friendship from ' + state.sender)}&body=${encodeURIComponent(state.sender + ' made you a jar of letters, one for every mood.\n\nOpen it here: ' + shareUrl + '\n\nHappy Friendship Day.')}">Email it to ${esc(state.recip)}</a>
       </div>
       <div style="margin-top:14px"><button class="btn btn-s" onclick="goHome()">← Back to start</button></div>
     </div>` + foot();
@@ -1060,7 +1048,7 @@ function renderSeal() {
     <div style="position:relative;width:226px;margin:0 auto 18px">
       <div id="seal-jar"></div>
       <div id="seal-stamp" style="position:absolute;top:22%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity 200ms ease">
-        <span style="display:inline-block;animation:stampIn 640ms cubic-bezier(.34,1.56,.64,1) both">${bowSVG(66, 'rose')}</span></div>
+        ${stampSVG(68, 'rose', 'envelope', 20, { marked: true, animate: true })}</div>
     </div>
     <div style="width:100%;max-width:270px;height:5px;border-radius:3px;background:var(--edge-soft);margin:0 auto;overflow:hidden">
       <div id="seal-bar" style="width:0%;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--rose),var(--butter),var(--sage));transition:width 320ms ease"></div>
@@ -1072,23 +1060,13 @@ function renderSeal() {
 function copyLink() {
   const url = location.origin + location.pathname + '#jar=' + state.jarId;
   const done = () => {
-    const b = $('btn-copy'), s = $('btn-share');
-    if (b) { b.style.background = 'var(--sage-d)'; b.textContent = 'Copied ✓'; }
-    if (s) s.textContent = 'Link copied ✓';
-    setTimeout(() => {
-      if (b) { b.style.background = 'var(--rose-deep)'; b.textContent = 'Copy'; }
-      if (s) s.textContent = 'Send it to ' + state.recip + ' →';
-    }, 2000);
+    const b = $('btn-copy');
+    if (b) { b.style.background = HUE.sage.deep; b.textContent = 'Copied ✓'; }
+    setTimeout(() => { if (b) { b.style.background = 'var(--rose-deep)'; b.textContent = 'Copy'; } }, 2000);
   };
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, done);
   else { const i = $('share-url'); if (i) { i.select(); try { document.execCommand('copy'); } catch (e) {} } done(); }
 }
-function shareJar() {
-  const url = location.origin + location.pathname + '#jar=' + state.jarId;
-  const payload = { title: 'Jar of Friendship', text: state.sender + ' made you a jar of letters', url };
-  if (navigator.share) navigator.share(payload).catch(() => copyLink()); else copyLink();
-}
-
 /* ══ the jar, as the friend sees it ══ */
 function renderRecipient() {
   const d = state.jarData;
@@ -1097,7 +1075,7 @@ function renderRecipient() {
     const hasM = l.media && l.media.src;
     return `<div class="sheet lcard ${op ? 'done' : ''}" onclick="openLetter(${i})" role="button" tabindex="0"
       onkeydown="kbd(event,function(){openLetter(${i})})" style="animation-delay:${i * 40}ms">
-      <div class="center" style="margin:2px 0 12px"><span style="opacity:${op ? .42 : 1}">${bowSVG(op ? 48 : 56, pr.c)}</span></div>
+      <div class="center" style="margin:2px 0 12px"><span style="opacity:${op ? .55 : 1}">${stampSVG(58, pr.c, pr.m, pr.d, { marked: op })}</span></div>
       <div class="label" style="padding-right:0;text-align:center">${esc(pr.label)}</div>
       <div class="row" style="gap:7px;margin-top:10px">
         ${hasM ? `<span style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:${HUE[pr.c].deep}">
@@ -1129,8 +1107,14 @@ function renderRecipient() {
 }
 
 /* ── opening a letter: it unfolds, the postmark lands ───────── */
-function openLetter(idx) { state.viewIdx = idx; mountLetter('in'); }
+let turning = false;
+function openLetter(idx) {
+  if (turning || $('letter-ov')) return;
+  if (!state.jarData || !state.jarData.letters[idx]) return;
+  state.viewIdx = idx; mountLetter('in');
+}
 
+let escHandler = null;
 function mountLetter(dir) {
   const old = $('letter-ov'); if (old) old.remove();
   const l = state.jarData.letters[state.viewIdx], pr = P(l.promptId), C = HUE[pr.c];
@@ -1141,43 +1125,58 @@ function mountLetter(dir) {
     : `<video class="thumb" controls playsinline src="${esc(l.media.src)}" style="margin-top:14px"></video>`) : '';
   const ov = document.createElement('div');
   ov.id = 'letter-ov'; ov.className = 'ov';
+  const opening = dir === 'in';
+  const when = fmtDate(state.jarData.createdAt);
   ov.innerHTML =
-  `<div class="ovcard" style="perspective:1600px">
-    <div id="letter-card" class="sheet ruled" style="padding:22px 18px 18px;transform-origin:center top;
-      animation:${dir === 'in' ? 'unfoldTop 660ms cubic-bezier(.2,.86,.32,1.02) both' : dir === 'next' ? 'pageTurnIn 430ms ease-out both' : 'pageTurnIn 430ms ease-out both'}">
-      <div style="position:absolute;top:12px;right:12px"><span style="display:inline-block;animation:stampIn 620ms cubic-bezier(.34,1.56,.64,1) both;animation-delay:${dir === 'in' ? 560 : 200}ms">${bowSVG(52, pr.c)}</span></div>
-      <div style="position:absolute;left:0;top:18px;bottom:18px;width:5px;border-radius:0 4px 4px 0;background:${C.ink};opacity:.75"></div>
-      <div id="letter-inner" style="opacity:0;animation:fadeUp 420ms ease ${dir === 'in' ? 420 : 160}ms forwards">
-        <div class="hand" style="font-size:26px;color:${C.deep};padding-right:60px;margin-bottom:10px">${esc(pr.label)}</div>
-        <div class="note-body" style="padding-left:10px">${esc(l.text)}</div>
-        ${media}
-        <div class="script" style="font-size:25px;color:${C.deep};text-align:right;margin-top:16px">
-          — always in your corner, ${esc(state.jarData.sender)}</div>
-        <div class="row" style="justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px dashed var(--edge)">
-          <button class="btn-t" onclick="turnLetter(-1)" ${state.viewIdx === 0 ? 'disabled style="opacity:.35"' : ''}>← Previous</button>
-          <span style="font-size:12px;color:var(--ink45);font-weight:700">${state.viewIdx + 1} / ${total}</span>
-          <button class="btn-t" onclick="turnLetter(1)" ${state.viewIdx >= total - 1 ? 'disabled style="opacity:.35"' : ''}>Next →</button>
+  `<div class="ovcard">
+    <div class="envwrap">
+      ${opening ? `<div class="envpocket" style="background:linear-gradient(180deg,${C.tint},${C.ink});border:2.5px solid var(--ink)"></div>
+      <div class="envflap" style="background:${C.ink}"></div>` : ''}
+      <div id="letter-card" class="sheet ${opening ? 'letter-rise' : ''}" style="padding:18px 20px 14px;position:relative;z-index:8;
+        ${opening ? '' : 'animation:pageTurnIn 380ms ease-out both'}">
+        <div style="position:absolute;top:12px;right:12px">${stampSVG(50, pr.c, pr.m, pr.d, { marked: true, animate: true, delay: opening ? 1150 : 240 })}</div>
+        <div style="position:absolute;left:0;top:16px;bottom:16px;width:4px;border-radius:0 4px 4px 0;background:${C.ink}"></div>
+        <button onclick="closeLetter()" aria-label="Close this letter"
+          style="position:absolute;top:5px;left:7px;border:none;background:none;cursor:pointer;font-size:20px;
+          line-height:1;color:var(--ink45);min-width:40px;min-height:40px;border-radius:10px">×</button>
+        <div id="letter-inner" style="opacity:0;animation:fadeUp 420ms ease ${opening ? 1000 : 140}ms forwards;padding-top:26px">
+          <div class="hand" style="font-size:21px;color:${C.deep};padding-right:54px;line-height:1.2">${esc(pr.label)}</div>
+          <div style="font-size:11.5px;color:var(--ink45);margin:3px 0 12px">${esc(when)}</div>
+          <div class="paper-rules">
+            <div class="script" style="font-size:24px;line-height:34px;color:var(--ink)">Dear ${esc(state.jarData.recipient)},</div>
+            <div class="note-body">${esc(l.text)}</div>
+          </div>
+          ${media}
+          <div class="script" style="font-size:23px;color:${C.deep};text-align:right;margin-top:12px">
+            Always in your corner,<br>${esc(state.jarData.sender)}</div>
+          <div class="row" style="justify-content:space-between;align-items:center;margin-top:10px">
+            <button class="btn-t" onclick="turnLetter(-1)" ${state.viewIdx === 0 ? 'disabled style="opacity:.3"' : ''} aria-label="Previous letter">←</button>
+            <div class="row" style="gap:14px">
+              <span style="font-size:12px;color:var(--ink45);font-weight:700">${state.viewIdx + 1} / ${total}</span>
+              <button class="btn-t" style="font-weight:500;color:var(--ink45)" onclick="shareCard()">Share</button>
+            </div>
+            <button class="btn-t" onclick="turnLetter(1)" ${state.viewIdx >= total - 1 ? 'disabled style="opacity:.3"' : ''} aria-label="Next letter">→</button>
+          </div>
         </div>
-        <div class="row" style="justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap">
-          <button class="chipbtn" onclick="shareCard()">Share this letter as a card</button>
-        </div>
-        <div style="text-align:center;margin-top:10px;font-size:12.5px;color:var(--ink45)">Tap outside to close</div>
       </div>
     </div>
   </div>`;
   ov.addEventListener('click', e => { if (e.target === ov) closeLetter(); });
   document.body.appendChild(ov);
-  const onEsc = e => { if (e.key === 'Escape') { document.removeEventListener('keydown', onEsc); closeLetter(); } };
-  document.addEventListener('keydown', onEsc);
+  if (escHandler) document.removeEventListener('keydown', escHandler);
+  escHandler = e => { if (e.key === 'Escape') closeLetter(); };
+  document.addEventListener('keydown', escHandler);
   markOpened(l.promptId);
 }
 
 function turnLetter(step) {
+  if (turning) return;
   const next = state.viewIdx + step;
   if (next < 0 || next >= state.jarData.letters.length) return;
+  turning = true;
   const card = $('letter-card');
   if (card) card.style.animation = 'pageTurnOut 330ms ease-in both';
-  setTimeout(() => { state.viewIdx = next; mountLetter(step > 0 ? 'next' : 'prev'); }, 300);
+  setTimeout(() => { state.viewIdx = next; mountLetter(step > 0 ? 'next' : 'prev'); turning = false; }, 300);
 }
 function markOpened(pid) {
   if (!state.opened.has(pid)) {
@@ -1186,16 +1185,20 @@ function markOpened(pid) {
   }
 }
 function closeLetter() {
-  const o = $('letter-ov'); if (o) o.remove();
+  const o = $('letter-ov');
+  if (escHandler) { document.removeEventListener('keydown', escHandler); escHandler = null; }
+  if (!o) return;                       // nothing open: escape should be a no-op
+  o.remove();
   state.viewIdx = -1;
+  turning = false;
   renderRecipient();
 }
 
 
 /* ══ a shareable card for one letter ══ */
 async function stampPNG(pr, scale) {
-  const w = 100 * (scale || 3), h = w;
-  const img = await svgToImage(bowSVG(w, pr.c));
+  const w = 100 * (scale || 3), h = Math.round(w * 1.18);
+  const img = await svgToImage(stampSVG(w, pr.c, pr.m, pr.d, { marked: true }));
   const c = document.createElement('canvas');
   c.width = w; c.height = h;
   const x = c.getContext('2d');
@@ -1227,10 +1230,11 @@ function wrapText(ctx, text, maxW) {
 }
 
 async function shareCard() {
+  if (!state.jarData || state.viewIdx < 0 || !state.jarData.letters[state.viewIdx]) { toast('Open a letter first'); return; }
   const l = state.jarData.letters[state.viewIdx], pr = P(l.promptId), C = HUE[pr.c];
   toast('Drawing your card…');
   const W = 1080, M = 74, top = 132;
-  // measure first, then size the canvas to the letter — no dead space
+  // measure first, then size the canvas to the letter - no dead space
   const mc = document.createElement('canvas').getContext('2d');
   mc.font = '600 62px Caveat, cursive';
   const titleLines = wrapText(mc, pr.label, W - M * 2 - 300).slice(0, 3);
@@ -1268,8 +1272,8 @@ async function shareCard() {
 
   // the stamp
   try {
-    const img = await svgToImage(bowSVG(180, pr.c));
-    x.drawImage(img, W - M - 208, top + 44, 176, 176);
+    const img = await svgToImage(stampSVG(180, pr.c, pr.m, pr.d, { marked: true }));
+    x.drawImage(img, W - M - 206, top + 40, 172, 203);
   } catch (e) {}
 
   x.textBaseline = 'top';
@@ -1298,7 +1302,7 @@ async function shareCard() {
   const bodyEnd = y + shown.length * 58;
 
   x.fillStyle = C.deep; x.font = 'italic 500 44px Caveat, cursive'; x.textAlign = 'right';
-  x.fillText('— always in your corner, ' + state.jarData.sender, W - M - 46, Math.min(bodyEnd + 42, top + bh - 84));
+  x.fillText('Always in your corner, ' + state.jarData.sender, W - M - 46, Math.min(bodyEnd + 42, top + bh - 84));
 
   x.textAlign = 'center'; x.fillStyle = '#A2917E'; x.font = '700 24px Nunito, sans-serif';
   x.fillText('JAR OF FRIENDSHIP  ·  jar-of-friendship.pages.dev', W / 2, H - 96);
@@ -1312,7 +1316,7 @@ async function shareCard() {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = 'jar-of-friendship.png'; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-  toast('Card saved — share it anywhere');
+  toast('Card saved - share it anywhere');
 }
 
 /* ══ PDF keepsake ══ */
@@ -1325,7 +1329,7 @@ function loadScript(src) {
 }
 async function exportPDF() {
   const d = state.jarData;
-  if (!d) { nudgeKeepsake(); return; }
+  if (!d) { toast('Open a jar first, then you can save it as a PDF'); return; }
   toast('Making your keepsake…');
   try {
     if (!window.jspdf) await loadScript('vendor/jspdf.umd.min.js');
@@ -1351,47 +1355,133 @@ async function exportPDF() {
     pdf.text(`${d.letters.length} letters · ${fmtDate(d.createdAt)}`, W / 2, H * 0.5 + 20, { align: 'center' });
     pdf.text('Happy Friendship Day', W / 2, H - M, { align: 'center' });
     try {
-      const cover = await stampPNG({ c:'rose' }, 3);
-      if (cover) pdf.addImage(cover, 'PNG', W - M - 62, M + 2, 62, 62);
+      const cover = await stampPNG({ c:'rose', m:'heart', d:20 }, 3);
+      if (cover) pdf.addImage(cover, 'PNG', W - M - 56, M + 2, 56, 66);
     } catch (e) {}
 
-    for (let i = 0; i < d.letters.length; i++) {
-      const l = d.letters[i], pr = P(l.promptId), C = rgb(HUE[pr.c].deep), T = rgb(HUE[pr.c].tint);
-      pdf.addPage(); paper();
-      pdf.setFillColor(T[0], T[1], T[2]); pdf.rect(0, 0, W, 6, 'F');
-      pdf.setDrawColor(C[0], C[1], C[2]); pdf.setLineWidth(2);
-      pdf.line(M - 12, M + 6, M - 12, M + 46);
-      try {
-        const png = await stampPNG(pr, 3);
-        if (png) pdf.addImage(png, 'PNG', W - M - 54, M - 6, 54, 54);
-      } catch (e) { /* the words matter more than the stamp */ }
-      pdf.setTextColor(C[0], C[1], C[2]); pdf.setFont('times', 'bolditalic'); pdf.setFontSize(15);
-      pdf.text(pdf.splitTextToSize(pr.label, W - M * 2 - 76), M, M + 20);
-      let y = M + 62;
-      if (l.media && l.media.kind === 'image' && l.media.src.startsWith('data:')) {
-        try {
-          const iw = W - M * 2, ratio = (l.media.h && l.media.w) ? l.media.h / l.media.w : 0.66;
-          const ih = Math.min(iw * ratio, H * 0.34);
-          pdf.addImage(l.media.src, 'WEBP', M, y, iw, ih);
-          y += ih + 16;
-        } catch (e) { /* some builds refuse webp — skip the photo, keep the words */ }
-      }
-      pdf.setTextColor(59, 48, 40); pdf.setFont('times', 'normal'); pdf.setFontSize(12.5);
-      const lines = pdf.splitTextToSize(l.text, W - M * 2);
-      for (const ln of lines) {
-        if (y > H - M - 30) { pdf.addPage(); paper(); y = M + 10; }
-        pdf.text(ln, M, y); y += 17;
-      }
-      if (l.media && l.media.kind !== 'image') {
-        pdf.setTextColor(162, 145, 126); pdf.setFontSize(9.5); pdf.setFont('helvetica', 'italic');
-        pdf.text(`(a ${l.media.kind === 'audio' ? 'voice note' : 'video'} came with this letter — it lives in the jar)`, M, y + 6);
-        y += 20;
-      }
-      pdf.setTextColor(C[0], C[1], C[2]); pdf.setFont('times', 'italic'); pdf.setFontSize(11.5);
-      pdf.text(`— always in your corner, ${d.sender}`, W - M, Math.min(y + 18, H - M), { align: 'right' });
-      pdf.setTextColor(196, 182, 162); pdf.setFontSize(8.5); pdf.setFont('helvetica', 'normal');
-      pdf.text(String(i + 1), W / 2, H - 18, { align: 'center' });
+    // Letters flow one after another and only break to a new page when they
+    // genuinely do not fit, so a two line note never eats a whole sheet.
+    const bows = {};
+    for (const key of new Set(d.letters.map(l => P(l.promptId).c))) {
+      const q = PROMPTS.find(x => x.c === key) || PROMPTS[0];
+      try { bows[key] = await stampPNG(q, 3); } catch (e) { bows[key] = null; }
     }
+
+    const LEAD = 15.5, PAD = 16, GAP = 18;
+    let y = M;
+    let page = 1;
+    const newPage = () => { pdf.addPage(); paper(); page++; y = M; };
+
+    for (let i = 0; i < d.letters.length; i++) {
+      const l = d.letters[i], pr = P(l.promptId);
+      const C = rgb(HUE[pr.c].deep), T = rgb(HUE[pr.c].tint), K = rgb(HUE[pr.c].ink);
+      const innerW = W - M * 2 - PAD * 2;
+
+      pdf.setFont('times', 'bolditalic'); pdf.setFontSize(13);
+      const titleLines = pdf.splitTextToSize(pr.label, innerW - 44);
+      pdf.setFont('times', 'normal'); pdf.setFontSize(11.5);
+      const bodyLines = pdf.splitTextToSize(l.text, innerW);
+
+      let photo = null;
+      if (l.media && l.media.kind === 'image' && String(l.media.src).startsWith('data:')) {
+        const ratio = (l.media.h && l.media.w) ? l.media.h / l.media.w : 0.66;
+        const iw = Math.min(innerW, 190), ih = Math.min(iw * ratio, 128);
+        photo = { iw, ih };
+      }
+
+      const headH = titleLines.length * 16 + 16;                 // prompt + "Dear ..."
+      const bodyH = bodyLines.length * LEAD;
+      const signH = 22;
+      let cardH = PAD + headH + (photo ? photo.ih + 12 : 0) + bodyH + signH + PAD;
+
+      // start a fresh page if this letter cannot begin sensibly here
+      if (y + Math.min(cardH, 150) > H - M - 16) newPage();
+
+      const room = H - M - 16 - y;
+      const split = cardH > room;                                 // long letter: continue overleaf
+      const drawH = split ? room : cardH;
+
+      // the sheet the letter is written on
+      pdf.setFillColor(255, 253, 247); pdf.setDrawColor(226, 214, 196); pdf.setLineWidth(.8);
+      pdf.roundedRect(M, y, W - M * 2, drawH, 7, 7, 'FD');
+      pdf.setFillColor(K[0], K[1], K[2]);
+      pdf.roundedRect(M, y + 8, 3.4, drawH - 16, 1.7, 1.7, 'F');  // coloured spine
+      pdf.setFillColor(T[0], T[1], T[2]);
+      pdf.rect(M + 7, y, W - M * 2 - 7, 3, 'F');                  // tinted head band
+
+      let ty = y + PAD + 4;
+      if (bows[pr.c]) { try { pdf.addImage(bows[pr.c], 'PNG', W - M - PAD - 27, y + PAD - 7, 27, 32); } catch (e) {} }
+
+      pdf.setTextColor(C[0], C[1], C[2]); pdf.setFont('times', 'bolditalic'); pdf.setFontSize(13);
+      titleLines.forEach(ln => { pdf.text(ln, M + PAD, ty); ty += 16; });
+
+      pdf.setTextColor(120, 104, 112); pdf.setFont('times', 'italic'); pdf.setFontSize(11);
+      pdf.text(`Dear ${d.recipient},`, M + PAD, ty + 2); ty += 16;
+
+      if (photo) {
+        try { pdf.addImage(l.media.src, 'WEBP', M + PAD, ty, photo.iw, photo.ih); ty += photo.ih + 12; }
+        catch (e) { try { pdf.addImage(l.media.src, 'PNG', M + PAD, ty, photo.iw, photo.ih); ty += photo.ih + 12; } catch (e2) {} }
+      }
+
+      // faint rules, so it reads as writing paper
+      pdf.setDrawColor(238, 228, 214); pdf.setLineWidth(.5);
+      const ruleTop = ty - 4;
+      const ruleCount = Math.max(1, Math.floor((drawH - (ruleTop - y) - PAD - signH) / LEAD));
+      for (let r = 0; r < ruleCount; r++)
+        pdf.line(M + PAD, ruleTop + r * LEAD + 3, W - M - PAD, ruleTop + r * LEAD + 3);
+
+      pdf.setTextColor(59, 48, 40); pdf.setFont('times', 'normal'); pdf.setFontSize(11.5);
+      let printed = 0;
+      for (const ln of bodyLines) {
+        if (ty > y + drawH - PAD - signH) break;
+        pdf.text(ln, M + PAD, ty); ty += LEAD; printed++;
+      }
+
+      if (printed < bodyLines.length) {
+        // spill the rest onto the next page, still inside a letter sheet
+        let rest = bodyLines.slice(printed);
+        pdf.setTextColor(162, 145, 126); pdf.setFontSize(9);
+        pdf.text('continued overleaf', W - M - PAD, y + drawH - PAD + 4, { align: 'right' });
+        while (rest.length) {
+          newPage();
+          const cap = Math.floor((H - M * 2 - PAD * 2 - signH) / LEAD);
+          const chunk = rest.slice(0, cap); rest = rest.slice(cap);
+          const ch = PAD + chunk.length * LEAD + (rest.length ? PAD : signH + PAD);
+          pdf.setFillColor(255, 253, 247); pdf.setDrawColor(226, 214, 196); pdf.setLineWidth(.8);
+          pdf.roundedRect(M, y, W - M * 2, ch, 7, 7, 'FD');
+          pdf.setFillColor(K[0], K[1], K[2]);
+          pdf.roundedRect(M, y + 8, 3.4, ch - 16, 1.7, 1.7, 'F');
+          let cy = y + PAD;
+          pdf.setDrawColor(238, 228, 214); pdf.setLineWidth(.5);
+          chunk.forEach((_, r) => pdf.line(M + PAD, cy + r * LEAD + 3, W - M - PAD, cy + r * LEAD + 3));
+          pdf.setTextColor(59, 48, 40); pdf.setFont('times', 'normal'); pdf.setFontSize(11.5);
+          chunk.forEach(ln => { pdf.text(ln, M + PAD, cy); cy += LEAD; });
+          if (!rest.length) {
+            pdf.setTextColor(C[0], C[1], C[2]); pdf.setFont('times', 'italic'); pdf.setFontSize(11);
+            pdf.text(`Always in your corner, ${d.sender}`, W - M - PAD, cy + 10, { align: 'right' });
+          }
+          y += ch + GAP;
+        }
+      } else {
+        if (l.media && l.media.kind !== 'image') {
+          pdf.setTextColor(162, 145, 126); pdf.setFont('times', 'italic'); pdf.setFontSize(9);
+          pdf.text(`(a ${l.media.kind === 'audio' ? 'voice note' : 'video'} came with this letter, it lives in the jar)`, M + PAD, ty + 4);
+          ty += 12;
+        }
+        pdf.setTextColor(C[0], C[1], C[2]); pdf.setFont('times', 'italic'); pdf.setFontSize(11);
+        pdf.text(`Always in your corner, ${d.sender}`, W - M - PAD, y + drawH - PAD + 2, { align: 'right' });
+        y += drawH + GAP;
+      }
+    }
+
+    // page numbers, once the flow is settled
+    const total = pdf.internal.getNumberOfPages();
+    for (let n = 2; n <= total; n++) {
+      pdf.setPage(n);
+      pdf.setTextColor(196, 182, 162); pdf.setFontSize(8.5); pdf.setFont('helvetica', 'normal');
+      pdf.text(String(n - 1), W / 2, H - 18, { align: 'center' });
+    }
+
     pdf.save(`jar-of-friendship-${(d.recipient || 'keepsake').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.pdf`);
     toast('Saved as a PDF keepsake');
   } catch (err) {
@@ -1429,7 +1519,6 @@ function renderNotFound(msg) {
       ${esc(msg || 'The link may be mistyped, or the jar was never finished. Ask your friend to send it again.')}</p>
     <button class="btn btn-p" onclick="goHome()">Make your own jar →</button>
   </div>` + foot();
-  paintNav();
 }
 
 async function init() {
@@ -1440,10 +1529,10 @@ async function init() {
     if (d) { state.sender = d.sender || ''; state.recip = d.recip || ''; }
     state.screen = 'landing'; render(); return;
   }
-  renderLoading(); paintNav();
+  renderLoading();
   let data = null, failed = null;
   try { data = await loadJar(m[1]); } catch (e) { failed = e.message || 'Could not reach the jar'; }
-  if (failed) { renderNotFound("We couldn't load this jar just now — " + failed.toLowerCase() + '. Try refreshing in a moment.'); return; }
+  if (failed) { renderNotFound("We couldn't load this jar just now: " + failed.toLowerCase() + '. Try refreshing in a moment.'); return; }
   if (!data) { renderNotFound(); return; }
   state.jarData = data; state.jarId = m[1]; state.opened = readOpened(m[1]);
   state.screen = 'recipient'; render();
