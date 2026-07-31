@@ -2,28 +2,56 @@
   "rules": {
     ".read": false,
     ".write": false,
-
     "jars": {
       "$jarId": {
         ".read": true,
         ".write": "!data.exists() && newData.exists()",
         ".validate": "$jarId.length == 8 && newData.hasChildren(['sender','recipient','letters','createdAt'])",
-
-        "sender":    { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30" },
-        "recipient": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30" },
-        "createdAt": { ".validate": "newData.isString() && newData.val().length <= 40" },
-
+        "sender": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30"
+        },
+        "recipient": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30"
+        },
+        "createdAt": {
+          ".validate": "newData.isString() && newData.val().length <= 40"
+        },
         "letters": {
           ".validate": "newData.hasChildren()",
           "$index": {
             ".validate": "newData.hasChildren(['promptId','text'])",
-            "promptId": { ".validate": "newData.isString() && newData.val().length <= 24" },
-            "text":     { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1200" },
-            "$other":   { ".validate": false }
+            "promptId": {
+              ".validate": "newData.isString() && newData.val().length <= 24"
+            },
+            "text": {
+              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1200"
+            },
+            "media": {
+              ".validate": "newData.hasChildren(['kind','src'])",
+              "kind": {
+                ".validate": "newData.isString() && (newData.val() == 'image' || newData.val() == 'audio' || newData.val() == 'video')"
+              },
+              "src": {
+                ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 320000"
+              },
+              "w": {
+                ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 8000"
+              },
+              "h": {
+                ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 8000"
+              },
+              "$other": {
+                ".validate": false
+              }
+            },
+            "$other": {
+              ".validate": false
+            }
           }
         },
-
-        "$other": { ".validate": false }
+        "$other": {
+          ".validate": false
+        }
       }
     }
   }
