@@ -83,7 +83,7 @@ p,span,div,button,a,.label{overflow-wrap:break-word}
 .drifts{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .drifter{position:absolute;bottom:-40px;animation:drift linear infinite;will-change:transform}
 .screen{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:26px 18px 30px;animation:fadeUp 420ms ease}
-.foot{position:relative;z-index:1;text-align:center;padding:34px 18px 40px;font-size:13px;color:var(--ink45)}
+.foot{position:relative;z-index:1;text-align:center;padding:64px 18px 64px;font-size:13px;color:var(--ink45)}
 .foot b{color:var(--rose-deep);font-weight:700}
 .center{display:flex;justify-content:center;align-items:center}
 .row{display:flex;align-items:center;gap:10px}
@@ -140,6 +140,22 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
 .lcard:hover{transform:translateY(-5px) rotate(-.8deg);box-shadow:0 9px 0 rgba(46,34,51,.13)}
 .lcard .label{font-family:'Fredoka',sans-serif;font-weight:500;font-size:18px;line-height:1.28;color:var(--ink)}
 .lcard .mini{margin-top:12px;opacity:.85}
+/* a card should read as a postcard: stamp in the corner, a ruled address
+   block, and room for the label to run to three lines without colliding */
+.postcard{background:linear-gradient(178deg,#FFFFFF 0%,#FFFDF8 62%,var(--paper-lo) 100%);
+  padding:15px 15px 13px;text-align:left;display:flex;flex-direction:column;gap:0;min-height:150px}
+.postcard .pc-stamp{position:absolute;top:11px;right:12px;line-height:0}
+.postcard .pc-label{font-family:'Caveat',cursive;font-weight:600;font-size:21px;line-height:1.22;
+  color:var(--ink);padding:0 54px 11px 0;border-bottom:1px solid var(--edge-soft);margin-bottom:11px}
+.postcard .pc-body{display:flex;gap:12px;align-items:flex-start;flex:1}
+.postcard .pc-lines{flex:1.3}
+.postcard .pc-mark{flex:1;opacity:.55}
+.postcard .pc-lines i,.postcard .pc-mark i{display:block;height:2px;border-radius:2px;background:var(--edge-soft);margin-bottom:7px}
+.postcard .pc-lines i:nth-child(1){width:88%}
+.postcard .pc-lines i:nth-child(2){width:68%}
+.postcard .pc-lines i:nth-child(3){width:48%}
+.postcard .mini{margin:10px 0 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.postcard.opened{background:linear-gradient(178deg,var(--paper-lo),#F6EADA)}
 .lcard.done{opacity:.72}
 .lcard.done .label{color:var(--ink70)}
 .opened-tag{position:absolute;left:16px;bottom:12px;font-size:11px;font-weight:700;letter-spacing:.09em;
@@ -189,7 +205,7 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
   .beadword{gap:3.5px;padding:0 10px}
   .music{top:8px;right:8px;left:8px;justify-content:flex-start;padding:5px 10px 5px 6px}
   .music .tt{max-width:none}
-  .foot{padding:26px 14px 32px}
+  .foot{padding:48px 14px 52px}
 }
 </style>
 </head>
@@ -451,7 +467,7 @@ function toast(msg) {
   setTimeout(() => { if (t.parentNode) t.remove(); }, 2600);
 }
 
-const foot = () => '<div class="foot"><div class="center" style="margin-bottom:18px">' + bandSVG(330, ['rose','butter'], 'FRIENDS FOREVER')
+const foot = () => '<div class="foot"><div class="center" style="margin-bottom:30px">' + bandSVG(330, ['rose','butter'], 'FRIENDS FOREVER')
   + '</div><div style="line-height:1.7">Made with care by <b>Karthika</b> &nbsp;·&nbsp; Friendship Day 2026</div></div>';
 
 /* ══ media attached to letters ═══════════════════════════════════
@@ -783,13 +799,16 @@ function submitNames() { if (state.sender.trim() && state.recip.trim()) go('sele
 function renderSelect() {
   const cards = PROMPTS.map((p, i) => {
     const sel = state.selP.indexOf(p.id) > -1;
-    return `<div class="sheet lcard ${sel ? '' : ''}" onclick="toggleP('${p.id}')" role="checkbox" tabindex="0"
+    return `<div class="sheet lcard postcard" onclick="toggleP('${p.id}')" role="checkbox" tabindex="0"
       aria-checked="${sel}" onkeydown="kbd(event,function(){toggleP('${p.id}')})"
       style="animation-delay:${i * 28}ms;${sel ? 'border-color:' + HUE[p.c].ink + ';box-shadow:0 0 0 2px ' + HUE[p.c].tint + ', var(--sh-card)' : ''}">
-      <div class="center" style="margin-bottom:10px">${stampSVG(56, p.c, p.m, p.d, { marked: sel })}</div>
-      <div class="label" style="padding-right:0;text-align:center">${esc(p.label)}</div>
-      <div class="mini" style="font-size:12px;font-weight:700;text-align:center;color:${sel ? HUE[p.c].deep : 'var(--ink45)'};letter-spacing:.06em;text-transform:uppercase">
-        ${sel ? '✓ in the jar' : 'tap to add'}</div>
+      <span class="pc-stamp">${stampSVG(48, p.c, p.m, p.d, { marked: sel })}</span>
+      <div class="pc-label">${esc(p.label)}</div>
+      <div class="pc-body">
+        <div class="pc-lines"><i></i><i></i><i></i></div>
+        <div class="pc-mark"><i></i><i></i></div>
+      </div>
+      <div class="mini" style="color:${sel ? HUE[p.c].deep : 'var(--ink45)'}">${sel ? '✓ in the jar' : 'tap to add'}</div>
     </div>`;
   }).join('');
   const n = state.selP.length;
@@ -1033,8 +1052,7 @@ function renderSeal() {
         <button class="btn" id="btn-copy" onclick="copyLink()" style="background:var(--rose-deep);color:#fff;padding:12px 20px;min-height:44px;font-size:14px;white-space:nowrap;border:2.5px solid var(--ink)">Copy</button>
       </div>
       <div class="row" style="justify-content:center;flex-wrap:wrap;gap:10px">
-        <a class="btn btn-p" id="btn-email" style="text-decoration:none;display:inline-flex;align-items:center"
-           href="mailto:?subject=${encodeURIComponent('A Jar of Friendship from ' + state.sender)}&body=${encodeURIComponent(state.sender + ' made you a jar of letters, one for every mood.\n\nOpen it here: ' + shareUrl + '\n\nHappy Friendship Day.')}">Email it to ${esc(state.recip)}</a>
+        <button class="btn btn-p" id="btn-email" onclick="emailJar()">Email it to ${esc(state.recip)}</button>
       </div>
       <div style="margin-top:14px"><button class="btn btn-s" onclick="goHome()">← Back to start</button></div>
     </div>` + foot();
@@ -1057,6 +1075,22 @@ function renderSeal() {
   paintSealJar(); paintSealText();
 }
 
+function emailJar() {
+  const url = location.origin + location.pathname + '#jar=' + state.jarId;
+  const subject = 'A Jar of Friendship from ' + state.sender;
+  const body = state.sender + ' made you a jar of letters, one for every mood.\n\n'
+             + 'Open it here: ' + url + '\n\nHappy Friendship Day.';
+  const href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  // Plenty of desktops have no mail client wired up, so put the link on the
+  // clipboard as well: the tap always leaves you with something usable.
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).catch(() => {});
+  let opened = false;
+  const w = window.open(href, '_blank');
+  if (w) opened = true; else { try { location.href = href; opened = true; } catch (e) {} }
+  toast(opened ? 'Opening your mail app. The link is copied too.'
+               : 'No mail app found, so the link is copied instead.');
+}
+
 function copyLink() {
   const url = location.origin + location.pathname + '#jar=' + state.jarId;
   const done = () => {
@@ -1073,15 +1107,17 @@ function renderRecipient() {
   const cards = d.letters.map((l, i) => {
     const pr = P(l.promptId), op = state.opened.has(l.promptId);
     const hasM = l.media && l.media.src;
-    return `<div class="sheet lcard ${op ? 'done' : ''}" onclick="openLetter(${i})" role="button" tabindex="0"
+    return `<div class="sheet lcard postcard ${op ? 'opened' : ''}" onclick="openLetter(${i})" role="button" tabindex="0"
       onkeydown="kbd(event,function(){openLetter(${i})})" style="animation-delay:${i * 40}ms">
-      <div class="center" style="margin:2px 0 12px"><span style="opacity:${op ? .55 : 1}">${stampSVG(58, pr.c, pr.m, pr.d, { marked: op })}</span></div>
-      <div class="label" style="padding-right:0;text-align:center">${esc(pr.label)}</div>
-      <div class="row" style="gap:7px;margin-top:10px">
-        ${hasM ? `<span style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:${HUE[pr.c].deep}">
-          ${l.media.kind === 'image' ? '✦ photo inside' : l.media.kind === 'audio' ? '✦ voice note' : '✦ video inside'}</span>` : ''}
+      <span class="pc-stamp" style="opacity:${op ? .6 : 1}">${stampSVG(50, pr.c, pr.m, pr.d, { marked: op })}</span>
+      <div class="pc-label">${esc(pr.label)}</div>
+      <div class="pc-body">
+        <div class="pc-lines"><i></i><i></i><i></i></div>
+        <div class="pc-mark"><i></i><i></i></div>
       </div>
-      ${op ? '<span class="opened-tag">opened</span>' : ''}
+      ${hasM ? `<span class="mini" style="left:auto;right:16px;color:${HUE[pr.c].deep}">${
+        l.media.kind === 'image' ? 'photo inside' : l.media.kind === 'audio' ? 'voice note' : 'video inside'}</span>` : ''}
+      ${op ? '<span class="mini" style="color:var(--ink45)">opened</span>' : ''}
     </div>`;
   }).join('');
   const openedCount = state.opened.size;
