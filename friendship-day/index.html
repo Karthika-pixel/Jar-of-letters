@@ -23,19 +23,18 @@
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Caveat:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <style>
 :root{
-  --paper:#FBF4E6; --paper-hi:#FFFDF6; --paper-lo:#F3E8D2; --edge:#E2D2B6; --edge-soft:#EFE3CC;
-  --ink:#3B3028; --ink70:#6E5F51; --ink45:#A2917E;
-  --rose:#E4738A; --rose-deep:#BE4761; --rose-soft:#FBE4E7;
-  --blue:#7FA8C9; --sage:#8FB49A; --butter:#E9B85C; --lilac:#A895CF; --clay:#DC8B74;
-  --blue-d:#3F6B8C; --sage-d:#4C7358; --butter-d:#96701C; --lilac-d:#6A55A0; --clay-d:#A5503A;
-  --r-lg:20px; --r-md:14px; --r-sm:9px;
-  --sh-card:0 2px 3px rgba(59,48,40,.07), 0 10px 22px rgba(59,48,40,.09);
-  --sh-lift:0 6px 10px rgba(59,48,40,.09), 0 20px 40px rgba(59,48,40,.14);
+  --paper:#FDF6E8; --paper-hi:#FFFDF7; --paper-lo:#F7ECD6; --edge:#2A2521; --edge-soft:#E8DAC0;
+  --ink:#2A2521; --ink70:#5C5148; --ink45:#93867A;
+  --rose:#F2769C; --rose-deep:#C43C6B; --rose-soft:#FDE0E9;
+  --blue:#3B9BDC; --sage:#56A84F; --butter:#F5B921; --lilac:#7454C8; --clay:#F0862A; --red:#E5443B;
+  --r-lg:20px; --r-md:16px; --r-sm:10px;
+  --sh-card:4px 4px 0 rgba(42,37,33,.14);
+  --sh-lift:7px 8px 0 rgba(42,37,33,.20);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -48,7 +47,7 @@ body{
   background-attachment:fixed;
   font-family:'Nunito',system-ui,sans-serif; color:var(--ink);
   min-height:100vh; overflow-x:hidden; -webkit-font-smoothing:antialiased;
-  padding-bottom:86px;
+  padding-bottom:104px;
 }
 /* woven paper grain, drawn once and reused everywhere */
 body::before{
@@ -56,7 +55,9 @@ body::before{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
   mix-blend-mode:multiply;
 }
-h1,h2,h3,.hand{font-family:'Caveat',cursive;font-weight:700;line-height:1.08;letter-spacing:.2px}
+h1,h2,h3{font-family:'Baloo 2',system-ui,cursive;font-weight:800;line-height:1.06;letter-spacing:-.3px;overflow-wrap:anywhere}
+p,span,div,button,a,.label{overflow-wrap:break-word}
+.hand{font-family:'Baloo 2',system-ui,cursive;font-weight:700;line-height:1.14}
 .script{font-family:'Caveat',cursive;font-weight:500}
 
 /* ── motion ─────────────────────────────────────────────── */
@@ -92,7 +93,7 @@ h1,h2,h3,.hand{font-family:'Caveat',cursive;font-weight:700;line-height:1.08;let
 /* ── paper surfaces ─────────────────────────────────────── */
 .sheet{
   position:relative;background:linear-gradient(163deg,var(--paper-hi),var(--paper-lo));
-  border:1px solid var(--edge); border-radius:var(--r-md); box-shadow:var(--sh-card);
+  border:3px solid var(--ink); border-radius:var(--r-md); box-shadow:var(--sh-card);
 }
 .sheet::after{
   content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
@@ -108,23 +109,25 @@ h1,h2,h3,.hand{font-family:'Caveat',cursive;font-weight:700;line-height:1.08;let
 }
 
 /* ── buttons ────────────────────────────────────────────── */
-.btn{font-family:'Nunito',sans-serif;font-weight:700;border:none;border-radius:999px;cursor:pointer;
+.btn{font-family:'Baloo 2',system-ui,sans-serif;font-weight:700;border:none;border-radius:999px;cursor:pointer;
   transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms ease,background 180ms ease}
-.btn-p{background:linear-gradient(180deg,#EA8398,var(--rose));color:#fff;padding:13px 28px;font-size:16px;
-  box-shadow:0 3px 0 var(--rose-deep),0 8px 18px rgba(190,71,97,.24);animation:nudge 3s ease-in-out infinite}
-.btn-p:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--rose-deep),0 12px 24px rgba(190,71,97,.3)}
-.btn-p:active{transform:translateY(2px);box-shadow:0 1px 0 var(--rose-deep)}
-.btn-p:disabled{background:#E6DCCB;color:#AD9E8B;box-shadow:0 3px 0 #D3C6B2;cursor:default;animation:none;transform:none}
-.btn-s{background:rgba(255,253,246,.9);color:var(--ink70);border:1.5px solid var(--edge);padding:10px 20px;font-size:14px;font-weight:600}
+.btn-p{background:var(--rose);color:#fff;padding:13px 30px;font-size:17px;border:3px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);animation:nudge 3s ease-in-out infinite}
+.btn-p:hover{transform:translate(-1px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.btn-p:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn-p:disabled{background:#E6DCCB;color:#9D9082;box-shadow:4px 4px 0 rgba(42,37,33,.22);cursor:default;animation:none;transform:none}
+.btn-s{background:var(--paper-hi);color:var(--ink);border:2.5px solid var(--ink);padding:10px 20px;font-size:14px;font-weight:700;box-shadow:3px 3px 0 rgba(42,37,33,.16)}
 .btn-s:hover{border-color:var(--rose);color:var(--rose-deep);transform:translateY(-1px)}
-.btn-t{background:none;border:none;color:var(--rose-deep);font-weight:700;cursor:pointer;font-size:14px;padding:6px}
-.chipbtn{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--edge);background:var(--paper-hi);
-  border-radius:999px;padding:8px 15px;font-size:13px;font-weight:600;color:var(--ink70);cursor:pointer;transition:all 180ms ease}
+.btn-t{background:none;border:none;color:var(--rose-deep);font-weight:700;cursor:pointer;font-size:14.5px;padding:11px 14px;min-height:44px;border-radius:10px}
+.btn-t:hover:not(:disabled){background:var(--rose-soft)}
+.btn-t:disabled{cursor:default}
+.chipbtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:2.5px solid var(--ink);background:var(--paper-hi);
+  border-radius:999px;padding:11px 18px;min-height:44px;font-size:14px;font-weight:700;color:var(--ink);cursor:pointer;transition:all 180ms ease}
 .chipbtn:hover{border-color:var(--rose);color:var(--rose-deep)}
 .chipbtn.on{background:var(--rose-soft);border-color:var(--rose);color:var(--rose-deep)}
 
 /* ── inputs ─────────────────────────────────────────────── */
-input[type="text"],input[type="date"]{width:100%;padding:13px 15px;border:1.5px solid var(--edge);border-radius:var(--r-sm);
+input[type="text"],input[type="date"]{width:100%;padding:13px 15px;border:2.5px solid var(--ink);border-radius:var(--r-sm);
   font-family:'Nunito',sans-serif;font-size:16px;color:var(--ink);background:var(--paper-hi);outline:none;transition:all 160ms}
 input:focus{border-color:var(--rose);box-shadow:0 0 0 4px var(--rose-soft)}
 input::placeholder{color:var(--ink45)}
@@ -138,10 +141,15 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
   background:var(--rose-soft);padding:14px 16px;text-align:left;font-size:14.5px;line-height:1.55}
 
 /* ── stamp + letter cards ───────────────────────────────── */
+.beadword{display:inline-flex;align-items:center;gap:5px;position:relative;padding:0 14px;vertical-align:middle}
+.beadword::before{content:'';position:absolute;left:0;right:0;top:50%;height:3px;background:var(--ink);opacity:.35;border-radius:2px;z-index:0}
+.lbead{position:relative;z-index:1;width:30px;height:30px;border-radius:8px;border:2.8px solid var(--ink);display:grid;place-items:center;
+  font-family:'Baloo 2',sans-serif;font-weight:800;font-size:15px;color:var(--ink);background:#fff;
+  animation:popIn 400ms cubic-bezier(.34,1.56,.64,1) both}
 .lcard{position:relative;cursor:pointer;padding:20px 18px 18px;min-height:158px;display:flex;flex-direction:column;
   justify-content:space-between;animation:popIn 360ms cubic-bezier(.34,1.56,.64,1) both;
   transition:transform 260ms cubic-bezier(.34,1.56,.64,1),box-shadow 260ms ease}
-.lcard:hover{transform:translateY(-5px) rotate(-.6deg);box-shadow:var(--sh-lift)}
+.lcard:hover{transform:translateY(-5px) rotate(-1.2deg);box-shadow:var(--sh-lift)}
 .lcard .stamp{position:absolute;top:12px;right:12px}
 .lcard .label{font-family:'Caveat',cursive;font-weight:600;font-size:22px;line-height:1.16;padding-right:66px;color:var(--ink)}
 .lcard .mini{margin-top:12px;opacity:.85}
@@ -153,26 +161,26 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
 /* ── bottom nav ─────────────────────────────────────────── */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:center;padding:0 12px 12px;pointer-events:none}
 .navin{pointer-events:auto;display:flex;align-items:center;gap:4px;background:rgba(255,253,246,.94);
-  backdrop-filter:blur(10px);border:1.5px solid var(--edge);border-radius:999px;padding:6px;box-shadow:var(--sh-card)}
+  backdrop-filter:blur(10px);border:3px solid var(--ink);border-radius:999px;padding:6px;box-shadow:var(--sh-card)}
 .navb{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;
   padding:7px 15px;border-radius:999px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--ink45);transition:all 180ms}
 .navb.on{background:var(--rose-soft);color:var(--rose-deep)}
 .navb:hover{color:var(--rose-deep)}
 .navb svg{display:block}
-.fab{width:46px;height:46px;border-radius:50%;border:none;cursor:pointer;color:#fff;font-size:24px;line-height:1;
-  background:linear-gradient(180deg,#EA8398,var(--rose));box-shadow:0 3px 0 var(--rose-deep);margin:0 4px;
+.fab{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);cursor:pointer;color:#fff;font-size:24px;line-height:1;
+  background:var(--rose);box-shadow:3px 3px 0 var(--ink);margin:0 4px;
   display:grid;place-items:center;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)}
 .fab:hover{transform:translateY(-2px) rotate(90deg)}
 
 /* ── music pill ─────────────────────────────────────────── */
 .music{position:fixed;top:12px;right:12px;z-index:55;display:flex;align-items:center;gap:9px;
   background:rgba(255,253,246,.93);backdrop-filter:blur(8px);border:1.5px solid var(--edge);
-  border-radius:999px;padding:6px 12px 6px 7px;box-shadow:var(--sh-card);max-width:calc(100vw - 24px)}
+  border-radius:999px;padding:6px 12px 6px 7px;box-shadow:var(--sh-card);max-width:calc(100vw - 24px);border-width:2.5px}
 .music .art{width:30px;height:30px;border-radius:8px;background:linear-gradient(150deg,var(--butter),var(--rose));
-  border:1.5px solid var(--edge);display:grid;place-items:center;flex:none}
+  border:2.5px solid var(--ink);display:grid;place-items:center;flex:none}
 .music .tt{font-size:12px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:96px}
 .music .sub{font-size:10.5px;color:var(--ink45);font-weight:600}
-.music button{border:none;background:none;cursor:pointer;color:var(--ink70);padding:3px;display:grid;place-items:center;border-radius:6px}
+.music button{border:none;background:none;cursor:pointer;color:var(--ink);min-width:40px;min-height:40px;padding:6px;display:grid;place-items:center;border-radius:10px}
 .music button:hover{color:var(--rose-deep);background:var(--rose-soft)}
 .bars{display:flex;align-items:flex-end;gap:2px;height:13px}
 .bars i{width:2.5px;background:var(--rose);border-radius:2px;height:4px;transition:height 160ms}
@@ -182,19 +190,24 @@ textarea::placeholder{color:var(--ink45);font-family:'Nunito',sans-serif;font-si
   display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeUp 280ms ease;overflow-y:auto}
 .ovcard{width:100%;max-width:460px;position:relative}
 .note-body{font-family:'Caveat',cursive;font-size:25px;line-height:34px;white-space:pre-wrap;word-break:break-word}
-.mediabox{border:1.5px dashed var(--edge);border-radius:var(--r-sm);padding:14px;text-align:center;background:var(--paper-hi)}
-.thumb{width:100%;border-radius:var(--r-sm);border:1.5px solid var(--edge);display:block;
+.mediabox{border:2.5px dashed var(--ink);border-radius:var(--r-sm);padding:14px;text-align:center;background:var(--paper-hi)}
+.thumb{width:100%;border-radius:var(--r-sm);border:3px solid var(--ink);display:block;
   max-height:300px;object-fit:contain;background:var(--paper-lo)}
 .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:2000;background:var(--ink);color:#FFF8EA;
   padding:11px 20px;border-radius:999px;font-size:14px;font-weight:600;box-shadow:var(--sh-lift);animation:fadeUp 260ms ease}
 :focus-visible{outline:3px solid var(--rose);outline-offset:3px}
-@media (max-width:560px){
-  .screen{padding:20px 14px 26px}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px}
-  .lcard{min-height:138px;padding:16px 14px 14px}
-  .lcard .label{font-size:19px;padding-right:54px}
-  .music{top:8px;right:8px;padding:5px 10px 5px 6px}
-  .music .tt{max-width:72px}
+@media (max-width:620px){
+  /* the music pill lives at the top, so give the page room to clear it */
+  .screen{padding:64px 14px 26px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:13px}
+  .lcard{min-height:132px;padding:15px 13px 13px}
+  .lcard .label{font-size:19px;line-height:1.14;padding-right:44px}
+  .lcard .stamp{transform:scale(.8);transform-origin:top right}
+  .lbead{width:25px;height:25px;font-size:12.5px;border-radius:7px}
+  .beadword{gap:3.5px;padding:0 10px}
+  .music{top:8px;right:8px;left:8px;justify-content:flex-start;padding:5px 10px 5px 6px}
+  .music .tt{max-width:none}
+  .foot{padding-bottom:18px}
 }
 </style>
 </head>
@@ -244,24 +257,25 @@ async function loadJar(id) {
 
 /* ── palette ─────────────────────────────────────────────────── */
 const HUE = {
-  rose:   { ink:'#E4738A', deep:'#BE4761', tint:'#FBE4E7' },
-  blue:   { ink:'#7FA8C9', deep:'#3F6B8C', tint:'#E4EEF6' },
-  sage:   { ink:'#8FB49A', deep:'#4C7358', tint:'#E6F0E8' },
-  butter: { ink:'#E9B85C', deep:'#96701C', tint:'#FBF0D8' },
-  lilac:  { ink:'#A895CF', deep:'#6A55A0', tint:'#EEE9F8' },
-  clay:   { ink:'#DC8B74', deep:'#A5503A', tint:'#FAE7E0' }
+  rose:   { ink:'#F2769C', deep:'#C43C6B', tint:'#FDE0E9' },
+  blue:   { ink:'#3B9BDC', deep:'#1B6C9E', tint:'#D9ECFA' },
+  sage:   { ink:'#56A84F', deep:'#317030', tint:'#DEF1DB' },
+  butter: { ink:'#F5B921', deep:'#96700A', tint:'#FDEFCC' },
+  lilac:  { ink:'#7454C8', deep:'#4B2FA0', tint:'#E7E0FA' },
+  clay:   { ink:'#F0862A', deep:'#AD560C', tint:'#FCE4CD' },
+  red:    { ink:'#E5443B', deep:'#AE2820', tint:'#FBDCD9' }
 };
-const WHEEL = ['rose','blue','sage','butter','lilac','clay'];
+const WHEEL = ['rose','blue','butter','sage','clay','lilac','red'];
 
 /* ── the letters ─────────────────────────────────────────────── */
 const PROMPTS = [
   { id:'rough',    c:'blue',   m:'raincloud', d:10, label:"Open when you're having a rough day" },
   { id:'win',      c:'butter', m:'sun',       d:15, label:"Open when something amazing happens" },
-  { id:'miss',     c:'rose',   m:'heart',     d:20, label:"Open when you miss me" },
+  { id:'miss',     c:'red',    m:'heart',     d:20, label:"Open when you miss me" },
   { id:'far',      c:'blue',   m:'plane',     d:15, label:"Open when we're far apart" },
   { id:'true',     c:'lilac',  m:'sprig',     d:10, label:"Open when you need to hear something true" },
   { id:'lonely',   c:'sage',   m:'lantern',   d:20, label:"Open when you feel alone" },
-  { id:'angry',    c:'clay',   m:'storm',     d:15, label:"Open when you're furious at someone" },
+  { id:'angry',    c:'red',    m:'storm',     d:15, label:"Open when you're furious at someone" },
   { id:'sleep',    c:'lilac',  m:'moon',      d:10, label:"Open when you can't sleep" },
   { id:'brave',    c:'butter', m:'mountain',  d:20, label:"Open when you need courage" },
   { id:'laugh',    c:'rose',   m:'smile',     d:15, label:"Open when you need to laugh" },
@@ -340,6 +354,68 @@ function stampSVG(w, hueKey, kind, denom, opts) {
   </svg>`;
 }
 
+
+/* ══ friendship bands, letter beads and bows ══ */
+function bandSVG(w, cols, label) {
+  cols = cols || ['rose','sage'];
+  const H = 44, m = H / 2, TAIL = 46, W = Math.max(190, Math.round(w));
+  const c1 = HUE[cols[0]].ink, c2 = HUE[cols[1]].ink;
+  const tails = (x, dir) => [-13, -1, 12].map((dy, i) => {
+    const col = [c1, HUE[WHEEL[(i + 2) % 7]].ink, c2][i];
+    const ex = x + dir * TAIL, cx = x + dir * (TAIL * .55);
+    const d = `M${x},${m} Q${cx},${m + dy * .15} ${ex},${m + dy}`;
+    return `<path d="${d}" stroke="#2A2521" stroke-width="5.5" fill="none" stroke-linecap="round"/>`
+         + `<path d="${d}" stroke="${col}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  }).join('');
+  const braid = (x0, x1) => {
+    const span = x1 - x0; if (span < 26) return '';
+    const n = Math.max(1, Math.round(span / 40)), step = span / n;
+    let a = `M${x0},${m}`, b = `M${x0},${m}`, dots = '';
+    for (let i = 0; i < n; i++) {
+      const q = step / 4, hf = step / 2;
+      a += ` q${q},-9 ${hf},0 q${q},9 ${hf},0`;
+      b += ` q${q},9 ${hf},0 q${q},-9 ${hf},0`;
+    }
+    for (let i = 0; i <= n; i++)
+      dots += `<circle cx="${x0 + i * step}" cy="${m}" r="4.2" fill="${HUE[WHEEL[i % 7]].ink}" stroke="#2A2521" stroke-width="2"/>`;
+    return `<path d="${a}" stroke="#2A2521" stroke-width="9.5" fill="none" stroke-linecap="round"/>`
+         + `<path d="${b}" stroke="#2A2521" stroke-width="9.5" fill="none" stroke-linecap="round"/>`
+         + `<path d="${a}" stroke="${c1}" stroke-width="5" fill="none" stroke-linecap="round"/>`
+         + `<path d="${b}" stroke="${c2}" stroke-width="5" fill="none" stroke-linecap="round"/>` + dots;
+  };
+  let inner;
+  if (label) {
+    const pw = Math.max(44, Math.min(W - TAIL * 2 - 96, label.length * 9.6 + 34));
+    const px = (W - pw) / 2;
+    inner = braid(TAIL, px) + braid(px + pw, W - TAIL)
+      + `<rect x="${px}" y="${m - 13}" width="${pw}" height="26" rx="8" fill="${HUE[cols[0]].tint}" stroke="#2A2521" stroke-width="3"/>`
+      + `<text x="${px + pw / 2}" y="${m + 5.5}" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="13" font-weight="700" letter-spacing="1.1" fill="#2A2521">${label}</text>`;
+  } else inner = braid(TAIL, W - TAIL);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none" aria-hidden="true">${tails(TAIL, -1)}${tails(W - TAIL, 1)}${inner}</svg>`;
+}
+
+function beadWord(word) {
+  return '<span class="beadword">' + word.split('').map((ch, i) =>
+    `<span class="lbead" style="background:${HUE[WHEEL[i % 7]].tint};animation-delay:${i * 50}ms;transform:rotate(${i % 2 ? 2.5 : -2.5}deg)">${ch}</span>`
+  ).join('') + '</span>';
+}
+
+/* the tied bow — the emblem on a letter waiting to be opened */
+function bowSVG(size, key) {
+  const col = HUE[key || 'rose'].ink, u = 'b' + (++uid);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100" aria-hidden="true">
+    <defs><linearGradient id="${u}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff" stop-opacity=".4"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+    <path d="M44,58 C38,74 32,82 23,92 M56,58 C62,74 68,82 77,92" stroke="#2A2521" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M44,58 C38,74 32,82 23,92 M56,58 C62,74 68,82 77,92" stroke="${col}" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M50,52 C34,26 6,31 10,52 C13,69 38,66 50,52 Z" fill="${col}" stroke="#2A2521" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M50,52 C66,26 94,31 90,52 C87,69 62,66 50,52 Z" fill="${col}" stroke="#2A2521" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M50,52 C34,26 6,31 10,52 C13,69 38,66 50,52 Z" fill="url(#${u})"/>
+    <path d="M50,52 C66,26 94,31 90,52 C87,69 62,66 50,52 Z" fill="url(#${u})"/>
+    <circle cx="50" cy="52" r="11" fill="#FDF6E8" stroke="#2A2521" stroke-width="5"/>
+    <circle cx="50" cy="52" r="3.4" fill="${col}"/></svg>`;
+}
+
 /* the jar, tied with a friendship band */
 function jarSVG(size, count, tied) {
   const u = 'j' + (++uid);
@@ -394,7 +470,8 @@ function toast(msg) {
   setTimeout(() => { if (t.parentNode) t.remove(); }, 2600);
 }
 
-const foot = () => '<div class="foot">Made with care by <b>Karthika</b> &nbsp;·&nbsp; Friendship Day 2026</div>';
+const foot = () => '<div class="foot"><div class="center" style="margin-bottom:6px">' + bandSVG(330, ['rose','butter'], 'FRIENDS FOREVER')
+  + '</div>Made with care by <b>Karthika</b> &nbsp;·&nbsp; Friendship Day 2026</div>';
 
 /* ══ media attached to letters ═══════════════════════════════════
    A jar has to open on someone else's phone, so media travels with
@@ -667,10 +744,11 @@ function paintNav() {
     book: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M4 5.5A2 2 0 016 4h5v16H6a2 2 0 01-2-1.5z"/><path d="M20 5.5A2 2 0 0018 4h-5v16h5a2 2 0 002-1.5z"/></svg>'
   };
   const onRecipient = s === 'recipient';
+  const writing = s === 'names' || s === 'select' || s === 'write';
   host.innerHTML =
     `<div class="nav"><div class="navin">
       <button class="navb ${s === 'landing' ? 'on' : ''}" onclick="goHome()">${ic.jar}<span>Home</span></button>
-      <button class="fab" onclick="${onRecipient ? 'startNewJar()' : 'startFresh()'}" aria-label="Make a jar">+</button>
+      <button class="navb ${writing ? 'on' : ''}" onclick="startFresh()">${ic.mail}<span>${writing ? 'Writing' : 'New jar'}</span></button>
       <button class="navb ${onRecipient ? 'on' : ''}" onclick="${onRecipient ? 'exportPDF()' : 'nudgeKeepsake()'}">${ic.book}<span>Keepsake</span></button>
     </div></div>`;
 }
@@ -689,11 +767,13 @@ function renderLanding() {
     <div class="sheet airmail" style="padding:30px 26px 28px;text-align:center">
       <div style="position:absolute;top:14px;right:14px">${stampSVG(58, 'rose', 'heart', 20, { marked: true })}</div>
       <div class="center" style="margin:6px 0 2px"><span class="bobber">${jarSVG(164, 9, true)}</span></div>
-      <h1 style="font-size:clamp(40px,10vw,54px);margin:2px 0 2px">Jar of Friendship</h1>
+      <div class="center" style="margin:2px 0 8px">${beadWord('FRIENDS')}</div>
+      <h1 style="font-size:clamp(38px,9.5vw,52px);margin:2px 0 2px">Jar of Friendship</h1>
       <p class="script" style="font-size:23px;color:var(--ink70);margin-bottom:16px">Letters for every moment</p>
       <p style="font-size:16px;line-height:1.62;color:var(--ink70);max-width:390px;margin:0 auto 20px">
         Write a little letter for every mood — slip in a photo or a voice note — then tie up the jar
         and send your friend one link they can open all year.</p>
+      <div class="center" style="margin:4px 0 14px">${bandSVG(250, ['sage','lilac'])}</div>
       <button class="btn btn-p" onclick="go('names')">Start a jar</button>
       ${d ? `<div style="margin-top:13px"><button class="btn btn-s" onclick="resumeDraft()">Finish the jar you started</button></div>` : ''}
       <p style="margin-top:15px;font-size:13.5px;color:var(--ink45)">Free · no sign-up · just send them the link</p>
@@ -711,6 +791,7 @@ function renderNames() {
       <div style="position:absolute;top:12px;right:12px;opacity:.9">${stampSVG(46, 'butter', 'sun', 15)}</div>
       <div style="margin-bottom:16px;padding-right:56px"><label class="fl" for="inp-sender">Your name</label>
         <input type="text" id="inp-sender" placeholder="You" value="${esc(state.sender)}" maxlength="${MAX_NAME}" autocomplete="given-name" enterkeyhint="next"></div>
+      <div class="center" style="margin:2px 0 10px">${bandSVG(210, ['butter','blue'], '+')}</div>
       <div style="margin-bottom:20px"><label class="fl" for="inp-recip">Your friend's name</label>
         <input type="text" id="inp-recip" placeholder="Their name" value="${esc(state.recip)}" maxlength="${MAX_NAME}" autocomplete="off" enterkeyhint="go"></div>
       <button class="btn btn-p" id="btn-next" onclick="submitNames()" style="width:100%">Choose the moments →</button>
@@ -771,7 +852,7 @@ function renderWrite() {
   const dots = state.selP.map((id, i) => {
     const q = P(id), done = (state.letters[id] || '').trim(), cur = i === state.curIdx;
     return `<button onclick="jumpTo(${i})" title="${esc(q.label)}" aria-label="${esc(q.label)}"
-      style="border:none;background:none;cursor:pointer;padding:0;line-height:0;opacity:${cur ? 1 : done ? .82 : .42};
+      style="border:none;background:none;cursor:pointer;padding:7px 6px;min-height:44px;min-width:40px;line-height:0;opacity:${cur ? 1 : done ? .82 : .42};
       transform:scale(${cur ? 1.18 : 1}) rotate(${(i % 3 - 1) * 3}deg);transition:all 220ms cubic-bezier(.34,1.56,.64,1)">
       ${stampSVG(cur ? 30 : 25, q.c, q.m, q.d, { marked: !!done })}</button>`;
   }).join('');
@@ -969,14 +1050,15 @@ function renderSeal() {
       <div class="center">${jarSVG(184, state.selP.length, true)}</div>
       <div class="sheet airmail" style="padding:20px;margin:14px 0 14px">
         <div style="position:absolute;top:10px;right:10px">${stampSVG(48, 'rose', 'heart', 20, { marked: true, animate: true, delay: 400 })}</div>
-        <div class="hand" style="font-size:28px;padding-right:52px">From ${esc(state.sender)}, to ${esc(state.recip)}</div>
+        <div class="center" style="margin-bottom:8px">${beadWord(((state.recip.trim()[0] || 'F') + '+' + (state.sender.trim()[0] || 'F')).toUpperCase())}</div>
+        <div class="hand" style="font-size:26px;padding-right:52px">From ${esc(state.sender)}, to ${esc(state.recip)}</div>
         <div style="font-size:14px;color:var(--rose-deep);font-weight:700;margin-top:2px">Happy Friendship Day</div>
         <div style="font-size:12.5px;color:var(--ink45);margin-top:5px">${state.selP.length} letters · ${fmtDate(Date.now())}</div>
       </div>
       <div class="sheet" style="border-radius:999px;padding:7px 7px 7px 16px;display:flex;align-items:center;gap:9px;margin-bottom:16px">
         <input type="text" id="share-url" value="${esc(shareUrl)}" readonly
           style="flex:1;border:none;background:transparent;font-size:13px;color:var(--ink70);padding:0;min-width:0">
-        <button class="btn" id="btn-copy" onclick="copyLink()" style="background:var(--rose-deep);color:#fff;padding:9px 17px;font-size:13.5px;white-space:nowrap">Copy</button>
+        <button class="btn" id="btn-copy" onclick="copyLink()" style="background:var(--rose-deep);color:#fff;padding:12px 20px;min-height:44px;font-size:14px;white-space:nowrap;border:2.5px solid var(--ink)">Copy</button>
       </div>
       <div class="row" style="justify-content:center;flex-wrap:wrap;gap:10px">
         <button class="btn btn-p" id="btn-share" onclick="shareJar()">Send it to ${esc(state.recip)} →</button>
@@ -1032,8 +1114,9 @@ function renderRecipient() {
     const hasM = l.media && l.media.src;
     return `<div class="sheet lcard ${op ? 'done' : ''} ${i % 4 === 0 ? 'airmail' : ''}" onclick="openLetter(${i})" role="button" tabindex="0"
       onkeydown="kbd(event,function(){openLetter(${i})})" style="animation-delay:${i * 40}ms">
-      ${stampSVG(58, pr.c, pr.m, pr.d, { marked: op })}
-      <div class="label">${esc(pr.label)}</div>
+      ${stampSVG(46, pr.c, pr.m, pr.d, { marked: op })}
+      <div class="center" style="margin:2px 0 10px"><span style="opacity:${op ? .4 : 1}">${bowSVG(op ? 46 : 54, pr.c)}</span></div>
+      <div class="label" style="padding-right:0;text-align:center">${esc(pr.label)}</div>
       <div class="row" style="gap:7px;margin-top:10px">
         ${hasM ? `<span style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:${HUE[pr.c].deep}">
           ${l.media.kind === 'image' ? '✦ photo inside' : l.media.kind === 'audio' ? '✦ voice note' : '✦ video inside'}</span>` : ''}
@@ -1046,12 +1129,14 @@ function renderRecipient() {
   `<div class="screen">
     <div style="text-align:center;margin-bottom:24px">
       <div class="center">${jarSVG(150, d.letters.length, true)}</div>
-      <h2 style="font-size:clamp(34px,8vw,44px);margin:6px 0 0">A jar just for you, ${esc(d.recipient)}</h2>
+      <div class="center" style="margin:8px 0 10px">${beadWord('BESTFRIENDS')}</div>
+      <h2 style="font-size:clamp(32px,7.5vw,42px);margin:6px 0 0">A jar just for you, ${esc(d.recipient)}</h2>
       <p class="script" style="font-size:22px;color:var(--ink70)">${d.letters.length} letters, written by ${esc(d.sender)}</p>
       <p style="font-size:13.5px;color:var(--ink45);margin-top:6px">${openedCount} of ${d.letters.length} opened · the rest can wait for their day</p>
     </div>
     <div class="grid">${cards}</div>
     <div style="text-align:center;margin-top:36px">
+      <div class="center" style="margin-bottom:14px">${bandSVG(300, ['lilac','clay'], 'YOUR TURN')}</div>
       <p class="hand" style="font-size:26px;color:var(--ink70);margin-bottom:12px">Keep it forever?</p>
       <div class="row" style="justify-content:center;flex-wrap:wrap;gap:10px">
         <button class="btn btn-s" onclick="exportPDF()">Save as a PDF keepsake</button>
